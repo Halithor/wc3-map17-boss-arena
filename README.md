@@ -24,3 +24,9 @@ The Rules and Conditions:
 - Teamwork - physically working on someone else's entry - is not allowed.
   - Feedback isn't considered teamwork and is welcome.
 - Judges may not participate.
+
+### Credit Due
+
+This repository is based on the wc3-ts-template. Setup guide and information on the
+[wiki](https://github.com/triggerhappy187/wc3-ts-template/wiki). This template **does not provide
+any gameplay content**, it only provides a build system for typescript.

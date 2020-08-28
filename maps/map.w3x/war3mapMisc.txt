@@ -1,0 +1,12 @@
+[Misc]
+AgiAttackSpeedBonus=0.0
+AgiDefenseBase=0.0
+AgiDefenseBonus=0.0
+FollowRange=100.0
+IntManaBonus=
+IntRegenBonus=0.0
+MaxHeroLevel=1
+StrAttackBonus=1.0
+StrHitPointBonus=
+StrRegenBonus=0.0
+

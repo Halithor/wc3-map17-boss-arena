@@ -1,55 +1,118 @@
 ﻿STRING 1
 {
-TypeScript Template
+End of the Ancients
 }
 
 STRING 2
 {
-Any
+2
 }
 
 STRING 3
 {
-Nondescript
+A 2 player boss fight scenario for the Hiveworkshop's mini mapping contest #17.
 }
 
 STRING 4
 {
-TriggerHappy
+Halithor
 }
 
 STRING 5
 {
-Player 1
+Halithor's
 }
 
 STRING 6
 {
-Player 2
+Culling of Forest
 }
 
 STRING 7
 {
-Player 3
+The Ancients
 }
 
 STRING 8
 {
-Force 1
+The Heroes
 }
 
 STRING 9
+// Destructibles: B000 (Trees), Name (Name)
 {
-Force 2
+Trees
 }
 
 STRING 10
+// Destructibles: B001 (Rocks), Name (Name)
 {
-Player 4
+Rocks
 }
 
 STRING 11
+// Destructibles: B002 (Trees), Name (Name)
 {
-Player 12
+Trees
+}
+
+STRING 12
+// Destructibles: B002 (Trees), EditorSuffix (Editor Suffix)
+{
+ (Invulnerable)
+}
+
+STRING 13
+// Units: U000 (Scarab King), Name (Name)
+{
+Scarab King
+}
+
+STRING 14
+// Units: U000 (Scarab King), Propernames (Proper Names)
+{
+Arak-arahm
+}
+
+STRING 15
+// Units: U000 (Scarab King), Awakentip (Tooltip - Awaken)
+{
+Scarab King
+}
+
+STRING 16
+// Units: U000 (Scarab King), Tip (Tooltip - Basic)
+{
+Scarab King
+}
+
+STRING 17
+// Units: U000 (Scarab King), Ubertip (Tooltip - Extended)
+{
+Scarab King
+}
+
+STRING 18
+// Units: U000 (Scarab King), Revivetip (Tooltip - Revive)
+{
+Scarab King
+}
+
+STRING 19
+// Units: e001 (Ancient Keeper), Ubertip (Tooltip - Extended)
+{
+Ancient Keepr
+}
+
+STRING 20
+// Units: e001 (Ancient Keeper), Tip (Tooltip - Basic)
+{
+Ancient Keepr
+}
+
+STRING 22
+// Units: e001 (Ancient Keeper), Name (Name)
+{
+Ancient Keeper
 }
 
