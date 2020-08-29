@@ -1,4 +1,4 @@
-import {Unit, Trigger, Region, Rectangle} from 'w3ts/index'
+import {Unit, Trigger, Region, Rectangle, FogModifier} from 'w3ts/index'
 import {UnitIds, PlayerAncients, PlayerOne} from 'constants'
 import {Players} from 'w3ts/globals/index'
 import {TreeAncient} from 'treeAncient'
@@ -15,6 +15,15 @@ export class Game {
 
   start() {
     PauseCompAI(PlayerAncients.handle, true)
+    const compVision = new FogModifier(
+      PlayerAncients,
+      FOG_OF_WAR_VISIBLE,
+      0,
+      0,
+      99999,
+      true,
+      true
+    )
 
     const startRegion = new Region()
     startRegion.addRect(Rectangle.fromHandle(gg_rct_FightStart))

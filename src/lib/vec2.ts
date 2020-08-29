@@ -64,11 +64,11 @@ export class Vec2 {
   }
 
   public rotate(angle: Angle): Vec2 {
-    const c = angle.cos
-    const s = angle.sin
+    const cos = angle.cos
+    const sin = angle.sin
 
-    const px = this.x * c - this.y * s
-    const py = this.x * s + this.y * c
+    const px = this.x * cos - this.y * sin
+    const py = this.x * sin + this.y * cos
     return new Vec2(px, py)
   }
 

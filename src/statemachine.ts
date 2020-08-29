@@ -9,7 +9,7 @@ export class Statemachine {
   timer: Timer
   currentState: State
 
-  constructor(startingState: State, entity: Unit) {
+  constructor(startingState: State, entity: Unit, timerTick: number = 0.01) {
     this.currentState = startingState
     this.timer = new Timer()
 
