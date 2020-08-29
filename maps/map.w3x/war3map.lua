@@ -8,28 +8,6 @@ gg_trg_Untitled_Trigger_001 = nil
 function InitGlobals()
 end
 
-function CreateUnitsForPlayer0()
-    local p = Player(0)
-    local u
-    local unitID
-    local t
-    local life
-    u = BlzCreateUnitWithSkin(p, FourCC("e001"), 16.9, -3666.5, 20.890, FourCC("e001"))
-    u = BlzCreateUnitWithSkin(p, FourCC("U000"), -72.7, -4340.9, 276.798, FourCC("U000"))
-end
-
-function CreatePlayerBuildings()
-end
-
-function CreatePlayerUnits()
-    CreateUnitsForPlayer0()
-end
-
-function CreateAllUnits()
-    CreatePlayerBuildings()
-    CreatePlayerUnits()
-end
-
 function CreateRegions()
     local we
     gg_rct_Boss_Spawn = Rect(-448.0, 512.0, 416.0, 992.0)
@@ -104,7 +82,6 @@ function main()
     SetAmbientNightSound("AshenvaleNight")
     SetMapMusic("Music", true, 0)
     CreateRegions()
-    CreateAllUnits()
     InitBlizzard()
     InitGlobals()
     InitCustomTriggers()

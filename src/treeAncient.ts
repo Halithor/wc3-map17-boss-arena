@@ -99,7 +99,7 @@ class Attacking implements State {
       // this.trg.destroy()
       return this.pickNextState(tree)
     }
-    if (ModuloInteger(this.duration, 25) == 0) {
+    if (ModuloInteger(this.duration, 100) == 0) {
       print('attacking(' + this.duration.toString() + '): ' + this.target.name)
     }
     return this
@@ -120,7 +120,12 @@ class Attacking implements State {
   }
 
   private pickNextState(tree: Unit): State {
-    return new ChargeWarmup(tree)
+    const rand = GetRandomReal(0, 1)
+    if (rand < 0.5) {
+      return new ChargeWarmup(tree)
+    } else {
+      return new EarthquakeWarmup(tree)
+    }
   }
 }
 
