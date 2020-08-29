@@ -24,6 +24,7 @@ export class Game {
       true,
       true
     )
+    SetTimeOfDay(6)
 
     const startRegion = new Region()
     startRegion.addRect(Rectangle.fromHandle(gg_rct_FightStart))

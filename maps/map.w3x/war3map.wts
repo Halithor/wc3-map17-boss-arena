@@ -122,3 +122,9 @@ STRING 23
 Tree Reduce Attack Speed
 }
 
+STRING 24
+// Units: n001 (Treant), Name (Name)
+{
+Treant
+}
+

@@ -1,7 +1,7 @@
 /** @noSelfInFile */
 
 import {Angle} from 'lib/angle'
-import {Unit} from 'w3ts/index'
+import {Unit, Widget} from 'w3ts/index'
 
 /**
  * Class that encapsulates a position in the game.
@@ -17,6 +17,10 @@ export class Vec2 {
 
   static unitPos(u: Unit): Vec2 {
     return new Vec2(u.x, u.y)
+  }
+
+  static widgetPos(w: Widget): Vec2 {
+    return new Vec2(w.x, w.y)
   }
 
   public get x() {

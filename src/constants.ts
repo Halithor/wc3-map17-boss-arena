@@ -9,4 +9,12 @@ export class UnitIds {
 
   static readonly TreantAncient = FourCC('e001')
   static readonly WispAncient = FourCC('e002')
+
+  static readonly TreantMob = FourCC('n001')
+  static readonly RockGolemMob = FourCC('n000')
+}
+
+export class DestructableIds {
+  static readonly TreeId = FourCC('B000')
+  static readonly RockId = FourCC('B001')
 }

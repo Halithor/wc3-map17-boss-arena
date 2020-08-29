@@ -1,5 +1,11 @@
-import {Unit, Timer, Effect, Group, Trigger} from 'w3ts/index'
-import {PlayerAncients, UnitIds, PlayerOne, PlayerTwo} from 'constants'
+import {Unit, Timer, Effect, Group, Trigger, Destructable} from 'w3ts/index'
+import {
+  PlayerAncients,
+  UnitIds,
+  PlayerOne,
+  PlayerTwo,
+  DestructableIds,
+} from 'constants'
 import {CircleIndicator, LineIndicator} from 'indicator'
 import {Vec2} from 'lib/vec2'
 import {damageEnemiesInArea} from 'lib/damage'
@@ -7,6 +13,9 @@ import {flashEffect} from 'lib/effect'
 import {Players} from 'w3ts/globals/index'
 import {Statemachine, State} from 'statemachine'
 import {findNearestUnit as getNearestUnit} from 'lib/groups'
+import {forDestructablesInCircle} from 'lib/destructables'
+import {Angle} from 'lib/angle'
+import {isTerrainWalkable} from 'lib/terrain'
 
 const updateDelta = 0.01
 
@@ -17,14 +26,17 @@ const earthquakeEffect =
   'Abilities\\Spells\\Human\\Thunderclap\\ThunderClapCaster.mdl'
 
 const chargeWarumpDuration = 200
-const chargeDistance = 2000
+const chargeDistance = 1800
 const chargeWidth = 300
-const chargeSpeed = 800
+const chargeSpeed = 1400
+const chargeDamage = 125
 
 export class TreeAncient {
   private readonly tree: Unit
 
   private statemachine: Statemachine
+
+  private addTimer: Timer
 
   constructor() {
     this.tree = new Unit(
@@ -35,6 +47,30 @@ export class TreeAncient {
       270
     )
     this.tree.issueImmediateOrder('unroot')
+
+    const g = new Group()
+    this.addTimer = new Timer()
+    this.addTimer.start(5, true, () => {
+      g.enumUnitsOfPlayer(
+        PlayerAncients,
+        Filter(() => {
+          return !this.tree.isUnit(Unit.fromHandle(GetFilterUnit()))
+        })
+      )
+      print('ordering ' + g.size + ' units')
+      g.for(() => {
+        const u = Unit.fromHandle(GetEnumUnit())
+        const target = getNearestUnit(
+          Vec2.unitPos(u),
+          2500,
+          Filter(() => {
+            return Unit.fromHandle(GetFilterUnit()).isEnemy(PlayerAncients)
+          })
+        )
+        u.issueOrderAt('attack', target.x, target.y)
+        print(u.name + ' attacks ' + target.name)
+      })
+    })
   }
 
   start() {
@@ -51,29 +87,7 @@ class Attacking implements State {
   private target: Unit = null
   private duration: number = 0
 
-  // private trg: Trigger
-
-  constructor(tree: Unit) {
-    // this.trg = new Trigger()
-    // this.trg.registerAnyUnitEvent(EVENT_PLAYER_UNIT_ATTACKED)
-    // this.trg.addAction(() => {
-    //   print('attacked')
-    //   const target = Unit.fromHandle(GetTriggerUnit())
-    //   const attacker = Unit.fromHandle(GetAttacker())
-    //   if (attacker.isUnit(tree)) {
-    //     this.trg.enabled = false
-    //     print('by tree!')
-    //     attacker.issueOrderAt('attackground', target.x, target.y)
-    //     const t = new Timer()
-    //     t.start(1.2, false, () => {
-    //       print('normal attack')
-    //       tree.issueTargetOrder('attack', this.target)
-    //       this.trg.enabled = true
-    //       t.destroy()
-    //     })
-    //   }
-    // })
-  }
+  constructor(tree: Unit) {}
 
   update(tree: Unit): State {
     this.duration++
@@ -203,7 +217,12 @@ class ChargeWarmup implements State {
       chargeDistance
     )
     this.indicator = new LineIndicator(this.startPos, this.targetPos, 0, 2)
+    tree.issueImmediateOrder('stop')
     tree.paused = true
+    tree.setAnimation('morph')
+    const pointer = this.startPos.normalizedPointerTo(this.targetPos)
+    const ang = Angle.fromRadians(Atan2(pointer.y, pointer.x))
+    tree.facing = ang.degrees
     this.duration = 0
     print('charge Warmup')
   }
@@ -215,7 +234,7 @@ class ChargeWarmup implements State {
     const indicatorWidth = indicatorProgress * chargeWidth
     this.indicator.width = indicatorWidth
     if (this.duration > chargeWarumpDuration) {
-      return new Attacking(entity) // TODO
+      return new Charge(entity, this.startPos, this.targetPos, this.indicator)
     }
     if (ModuloInteger(this.duration, 25) == 0) {
       print('chargewarmup(' + this.duration.toString() + ')')
@@ -231,15 +250,108 @@ class ChargeWarmup implements State {
 }
 
 class Charge implements State {
-  constructor(private startPos: Vec2, private targetPos: Vec2) {
+  private duration: number = 0
+  private trgHit: Trigger
+  private createdGroup: Group
 
+  constructor(
+    tree: Unit,
+    private startPos: Vec2,
+    private targetPos: Vec2,
+    private indicator: LineIndicator
+  ) {
+    tree.issueImmediateOrder('stop')
+    tree.setAnimation('walk')
+    tree.setTimeScale(2)
+
+    this.createdGroup = new Group()
+
+    this.trgHit = new Trigger()
+    this.trgHit.registerUnitInRage(tree.handle, chargeWidth / 2, null)
+    this.trgHit.addAction(() => {
+      const hit = Unit.fromHandle(GetTriggerUnit())
+      if (!this.createdGroup.hasUnit(hit)) {
+        tree.damageTarget(
+          hit.handle,
+          chargeDamage,
+          0,
+          true,
+          false,
+          ATTACK_TYPE_MELEE,
+          DAMAGE_TYPE_PLANT,
+          WEAPON_TYPE_WHOKNOWS
+        )
+      }
+    })
   }
+
   update(entity: Unit): State {
-    throw new Error("Method not implemented.")
-  }
-  interrupt(entity: Unit): State {
-    throw new Error("Method not implemented.")
+    this.duration++
+
+    const tickSpeed = chargeSpeed * updateDelta
+    const pos = Vec2.unitPos(entity)
+    const nextPos = pos.moveTowards(this.targetPos, tickSpeed)
+    if (!isTerrainWalkable(nextPos)) {
+      this.cleanup(entity)
+      return new Attacking(entity)
+    }
+    entity.x = nextPos.x
+    entity.y = nextPos.y
+
+    if (ModuloInteger(this.duration, 8) == 0) {
+      flashEffect(
+        'Abilities\\Spells\\Human\\Thunderclap\\ThunderClapCaster.mdl',
+        nextPos,
+        1.2
+      )
+      forDestructablesInCircle(
+        nextPos,
+        chargeWidth / 2 + 50,
+        (d: Destructable) => {
+          if (d.life > 1) {
+            d.kill()
+            if (d.typeId == DestructableIds.TreeId) {
+              const u = new Unit(
+                PlayerAncients,
+                UnitIds.TreantMob,
+                d.x,
+                d.y,
+                Angle.random().degrees
+              )
+              this.createdGroup.addUnit(u)
+            }
+            if (d.typeId == DestructableIds.RockId) {
+              const u = new Unit(
+                PlayerAncients,
+                UnitIds.RockGolemMob,
+                d.x,
+                d.y,
+                Angle.random().degrees
+              )
+              this.createdGroup.addUnit(u)
+            }
+          }
+        }
+      )
+    }
+
+    if (nextPos.distanceToSq(this.targetPos) < tickSpeed * tickSpeed) {
+      this.cleanup(entity)
+      return new Attacking(entity)
+    }
+    return this
   }
 
-  
+  interrupt(entity: Unit): State {
+    this.cleanup(entity)
+    return new Attacking(entity)
+  }
+
+  private cleanup(tree: Unit) {
+    this.indicator.remove()
+    tree.paused = false
+    tree.setTimeScale(1)
+    this.createdGroup.destroy()
+    this.trgHit.destroy()
+  }
 }

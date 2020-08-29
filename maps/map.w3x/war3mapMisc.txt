@@ -5,6 +5,7 @@ AgiDefenseBonus=0.0
 FollowRange=100.0
 IntManaBonus=
 IntRegenBonus=0.0
+MaxGuardDistance=3000.0
 MaxHeroLevel=1
 StrAttackBonus=1.0
 StrHitPointBonus=
