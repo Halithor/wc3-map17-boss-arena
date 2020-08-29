@@ -1,5 +1,5 @@
 import {Unit, Trigger, Region, Rectangle} from 'w3ts/index'
-import {UnitIds, PlayerAncients} from 'constants'
+import {UnitIds, PlayerAncients, PlayerOne} from 'constants'
 import {Players} from 'w3ts/globals/index'
 import {TreeAncient} from 'treeAncient'
 
@@ -26,7 +26,7 @@ export class Game {
 
   private spawnPlayers() {
     let scarab = new Unit(
-      Players[0],
+      PlayerOne,
       UnitIds.ScarabKing,
       GetRectCenterX(gg_rct_HeroSpawn),
       GetRectCenterY(gg_rct_HeroSpawn),

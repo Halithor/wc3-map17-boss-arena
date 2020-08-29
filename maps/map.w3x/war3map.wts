@@ -116,3 +116,9 @@ STRING 22
 Ancient Keeper
 }
 
+STRING 23
+// Abilities: A000 (Tree Reduce Attack Speed), Name (Name)
+{
+Tree Reduce Attack Speed
+}
+

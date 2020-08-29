@@ -2,7 +2,7 @@ import {Timer, Unit} from 'w3ts/index'
 
 export interface State {
   update(entity: Unit): State
-  interrupt(): State
+  interrupt(entity: Unit): State
 }
 
 export class Statemachine {
