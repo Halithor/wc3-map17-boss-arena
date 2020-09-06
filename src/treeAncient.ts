@@ -57,7 +57,6 @@ export class TreeAncient {
           return !this.tree.isUnit(Unit.fromHandle(GetFilterUnit()))
         })
       )
-      print('ordering ' + g.size + ' units')
       g.for(() => {
         const u = Unit.fromHandle(GetEnumUnit())
         const target = getNearestUnit(
@@ -68,7 +67,6 @@ export class TreeAncient {
           })
         )
         u.issueOrderAt('attack', target.x, target.y)
-        print(u.name + ' attacks ' + target.name)
       })
     })
   }

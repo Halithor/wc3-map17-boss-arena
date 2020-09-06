@@ -1,7 +1,7 @@
 /** @noSelfInFile */
 
 import {Angle} from 'lib/angle'
-import {Unit, Widget} from 'w3ts/index'
+import {Unit, Widget, Point} from 'w3ts/index'
 
 /**
  * Class that encapsulates a position in the game.
@@ -29,6 +29,13 @@ export class Vec2 {
 
   public get y() {
     return this.yInternal
+  }
+
+  public get terrainZ() {
+    const temp = new Point(this.x, this.y)
+    const z = temp.z
+    temp.destroy()
+    return z
   }
 
   public add(other: Vec2): Vec2 {

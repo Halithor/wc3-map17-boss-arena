@@ -45,6 +45,7 @@ export class CircleIndicator {
       const pos = this.pos.polarOffset(angle, this.radius)
       effect.x = pos.x
       effect.y = pos.y
+      effect.z = pos.terrainZ
       effect.setYaw(angle.radians)
     })
   }
@@ -125,6 +126,7 @@ export class LineIndicator {
         .add(dir.rotate(Angle.fromDegrees(-90)).scale(this._width / 2))
       eff.x = pos.x
       eff.y = pos.y
+      eff.z = pos.terrainZ
     }
     for (let i = 0; i < this.effectsRight.length; i++) {
       const eff = this.effectsRight[i]
@@ -133,6 +135,7 @@ export class LineIndicator {
         .add(dir.rotate(Angle.fromDegrees(90)).scale(this._width / 2))
       eff.x = pos.x
       eff.y = pos.y
+      eff.z = pos.terrainZ
     }
   }
 

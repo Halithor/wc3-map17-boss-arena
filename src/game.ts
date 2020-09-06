@@ -1,7 +1,9 @@
 import {Unit, Trigger, Region, Rectangle, FogModifier} from 'w3ts/index'
-import {UnitIds, PlayerAncients, PlayerOne} from 'constants'
+import {UnitIds, PlayerAncients, PlayerOne, PlayerTwo} from 'constants'
 import {Players} from 'w3ts/globals/index'
 import {TreeAncient} from 'treeAncient'
+
+const playerVisionRadius = 5100
 
 export class Game {
   readonly startEncounter: Trigger
@@ -15,15 +17,6 @@ export class Game {
 
   start() {
     PauseCompAI(PlayerAncients.handle, true)
-    const compVision = new FogModifier(
-      PlayerAncients,
-      FOG_OF_WAR_VISIBLE,
-      0,
-      0,
-      99999,
-      true,
-      true
-    )
     SetTimeOfDay(6)
 
     const startRegion = new Region()
@@ -47,9 +40,43 @@ export class Game {
     // TODO: Other player
   }
 
+  private createVision() {
+    const compVision = new FogModifier(
+      PlayerAncients,
+      FOG_OF_WAR_VISIBLE,
+      0,
+      0,
+      99999,
+      true,
+      true
+    )
+    compVision.start()
+    const p1Vision = new FogModifier(
+      PlayerOne,
+      FOG_OF_WAR_VISIBLE,
+      0,
+      0,
+      playerVisionRadius,
+      true,
+      true
+    )
+    p1Vision.start()
+    const p2Vision = new FogModifier(
+      PlayerTwo,
+      FOG_OF_WAR_VISIBLE,
+      0,
+      0,
+      playerVisionRadius,
+      true,
+      true
+    )
+    p2Vision.start()
+  }
+
   private onStartEncounter() {
     this.treeAncient.start()
     this.startEncounter.destroy()
+    this.createVision()
   }
 
   private restart() {}

@@ -1,21 +1,23 @@
 gg_rct_Boss_Spawn = nil
-gg_rct_NorthSpawn = nil
-gg_rct_SouthSpawn = nil
-gg_rct_Entryway = nil
 gg_rct_FightStart = nil
 gg_rct_HeroSpawn = nil
 gg_trg_Untitled_Trigger_001 = nil
+gg_rct_StatueNE = nil
+gg_rct_StatueNW = nil
+gg_rct_StatueSE = nil
+gg_rct_StatueSW = nil
 function InitGlobals()
 end
 
 function CreateRegions()
     local we
-    gg_rct_Boss_Spawn = Rect(-448.0, 512.0, 416.0, 992.0)
-    gg_rct_NorthSpawn = Rect(-480.0, 2112.0, -192.0, 2464.0)
-    gg_rct_SouthSpawn = Rect(-768.0, -1984.0, -384.0, -1664.0)
-    gg_rct_Entryway = Rect(-512.0, -3328.0, 512.0, -2560.0)
-    gg_rct_FightStart = Rect(-576.0, -832.0, 448.0, -32.0)
-    gg_rct_HeroSpawn = Rect(-704.0, -1600.0, 320.0, -992.0)
+    gg_rct_Boss_Spawn = Rect(-512.0, -512.0, 512.0, 512.0)
+    gg_rct_FightStart = Rect(-608.0, -1600.0, 416.0, -800.0)
+    gg_rct_HeroSpawn = Rect(-448.0, -2496.0, 544.0, -1888.0)
+    gg_rct_StatueNE = Rect(1568.0, 1600.0, 1792.0, 1792.0)
+    gg_rct_StatueNW = Rect(-1696.0, 1504.0, -1504.0, 1728.0)
+    gg_rct_StatueSE = Rect(1536.0, -1760.0, 1760.0, -1568.0)
+    gg_rct_StatueSW = Rect(-1792.0, -1760.0, -1568.0, -1568.0)
 end
 
 --
@@ -93,8 +95,8 @@ function config()
     SetPlayers(3)
     SetTeams(3)
     SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)
-    DefineStartLocation(0, 256.0, -4352.0)
-    DefineStartLocation(1, -256.0, -4352.0)
+    DefineStartLocation(0, 320.0, -4736.0)
+    DefineStartLocation(1, 192.0, -5120.0)
     DefineStartLocation(2, 0.0, 0.0)
     InitCustomPlayerSlots()
     InitCustomTeams()

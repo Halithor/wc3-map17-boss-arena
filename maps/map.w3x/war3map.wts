@@ -128,3 +128,33 @@ STRING 24
 Treant
 }
 
+STRING 26
+// Doodads: D000 (Faries), Name (Name)
+{
+Faries
+}
+
+STRING 27
+// Doodads: D001 (Faries (Red)), Name (Name)
+{
+Faries (Red)
+}
+
+STRING 28
+// Doodads: D002 (Faries (Blue)), Name (Name)
+{
+Faries (Blue)
+}
+
+STRING 29
+// Doodads: D003 (Faries (Green)), Name (Name)
+{
+Faries (Green)
+}
+
+STRING 30
+// Destructibles: B003 (Lantern), Name (Name)
+{
+Lantern
+}
+
