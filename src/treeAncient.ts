@@ -91,7 +91,9 @@ class Attacking implements State {
     this.duration++
     if (this.target == null || !this.target.isAlive()) {
       this.pickNewTarget(tree)
-      tree.issueTargetOrder('attack', this.target)
+      if (this.target != null) {
+        tree.issueTargetOrder('attack', this.target)
+      }
     }
     if (this.duration > 800) {
       // this.trg.destroy()
@@ -108,11 +110,13 @@ class Attacking implements State {
   }
 
   private pickNewTarget(tree: Unit) {
+    // TODO: Handle null target in Attacking
     this.target = getNearestUnit(
       Vec2.unitPos(tree),
       3000,
       Filter(() => {
-        return Unit.fromHandle(GetFilterUnit()).isEnemy(PlayerAncients)
+        const u = Unit.fromHandle(GetFilterUnit())
+        return u.isEnemy(PlayerAncients) && u.isAlive()
       })
     )
   }
@@ -312,7 +316,9 @@ class Charge implements State {
         chargeWidth / 2 + 50,
         (d: Destructable) => {
           if (d.life > 1) {
-            d.kill()
+            if (!DestructableIds.isPathingBlocker(d.typeId)) {
+              d.kill()
+            }
             if (d.typeId == DestructableIds.TreeId) {
               const u = new Unit(
                 PlayerAncients,

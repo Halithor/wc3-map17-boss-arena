@@ -14,10 +14,10 @@ function CreateRegions()
     gg_rct_Boss_Spawn = Rect(-512.0, -512.0, 512.0, 512.0)
     gg_rct_FightStart = Rect(-608.0, -1600.0, 416.0, -800.0)
     gg_rct_HeroSpawn = Rect(-448.0, -2496.0, 544.0, -1888.0)
-    gg_rct_StatueNE = Rect(1568.0, 1600.0, 1792.0, 1792.0)
-    gg_rct_StatueNW = Rect(-1696.0, 1504.0, -1504.0, 1728.0)
-    gg_rct_StatueSE = Rect(1536.0, -1760.0, 1760.0, -1568.0)
-    gg_rct_StatueSW = Rect(-1792.0, -1760.0, -1568.0, -1568.0)
+    gg_rct_StatueNE = Rect(1472.0, 1568.0, 1696.0, 1760.0)
+    gg_rct_StatueNW = Rect(-1696.0, 1472.0, -1504.0, 1696.0)
+    gg_rct_StatueSE = Rect(1536.0, -1728.0, 1760.0, -1536.0)
+    gg_rct_StatueSW = Rect(-1760.0, -1728.0, -1536.0, -1536.0)
 end
 
 --

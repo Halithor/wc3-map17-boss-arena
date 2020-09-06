@@ -17,4 +17,11 @@ export class UnitIds {
 export class DestructableIds {
   static readonly TreeId = FourCC('B000')
   static readonly RockId = FourCC('B001')
+
+  static readonly PathingBlockerSmall = FourCC('YTpb')
+  static readonly PathingBlockerBig = FourCC('YTpc')
+
+  static isPathingBlocker(id: number): boolean {
+    return id == this.PathingBlockerSmall || id == this.PathingBlockerBig
+  }
 }
