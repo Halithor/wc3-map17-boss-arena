@@ -1,29 +1,32 @@
 gg_rct_Boss_Spawn = nil
 gg_rct_FightStart = nil
-gg_rct_HeroSpawn = nil
-gg_trg_Untitled_Trigger_001 = nil
+gg_rct_PlayerOneSpawn = nil
 gg_rct_StatueNE = nil
 gg_rct_StatueNW = nil
 gg_rct_StatueSE = nil
 gg_rct_StatueSW = nil
+gg_rct_PlayerTwoSpawn = nil
+gg_trg_Untitled_Trigger_001 = nil
 function InitGlobals()
 end
 
 function CreateRegions()
     local we
     gg_rct_Boss_Spawn = Rect(-512.0, -512.0, 512.0, 512.0)
-    gg_rct_FightStart = Rect(-608.0, -1600.0, 416.0, -800.0)
-    gg_rct_HeroSpawn = Rect(-448.0, -2496.0, 544.0, -1888.0)
-    gg_rct_StatueNE = Rect(1472.0, 1568.0, 1696.0, 1760.0)
-    gg_rct_StatueNW = Rect(-1696.0, 1472.0, -1504.0, 1696.0)
-    gg_rct_StatueSE = Rect(1536.0, -1728.0, 1760.0, -1536.0)
-    gg_rct_StatueSW = Rect(-1760.0, -1728.0, -1536.0, -1536.0)
+    gg_rct_FightStart = Rect(-576.0, -1536.0, 416.0, -1056.0)
+    gg_rct_PlayerOneSpawn = Rect(224.0, -5216.0, 480.0, -4960.0)
+    gg_rct_StatueNE = Rect(1472.0, 1568.0, 1664.0, 1760.0)
+    gg_rct_StatueNW = Rect(-1632.0, 1408.0, -1440.0, 1600.0)
+    gg_rct_StatueSE = Rect(1472.0, -1760.0, 1696.0, -1536.0)
+    gg_rct_StatueSW = Rect(-1728.0, -1728.0, -1536.0, -1536.0)
+    gg_rct_PlayerTwoSpawn = Rect(416.0, -4864.0, 672.0, -4608.0)
 end
 
 --
 function Trig_Untitled_Trigger_001_Actions()
     CreateNUnitsAtLoc(1, FourCC("e001"), Player(0), GetRectCenter(GetPlayableMapRect()), bj_UNIT_FACING)
     IssueImmediateOrderBJ(GetLastCreatedUnit(), "unroot")
+    AddLightningLoc("HWPB", GetUnitLoc(GetTriggerUnit()), GetRectCenter(GetPlayableMapRect()))
 end
 
 function InitTrig_Untitled_Trigger_001()

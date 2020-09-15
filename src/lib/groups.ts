@@ -3,34 +3,65 @@ import {Unit, Group} from 'w3ts/index'
 
 const maxCollisionSize = 200.0
 
+function getUnitsInRange(
+  pos: Vec2,
+  radius: number,
+  filter?: (Unit) => boolean,
+  collisionSizeFiltering: boolean = false
+): Group {
+  const enumGroup = new Group()
+  if (collisionSizeFiltering) {
+    enumGroup.enumUnitsInRange(
+      pos.x,
+      pos.y,
+      radius + maxCollisionSize,
+      Filter(() => {
+        const u = Unit.fromHandle(GetFilterUnit())
+        return (
+          u.inRange(pos.x, pos.y, radius) && (filter != null ? filter(u) : true)
+        )
+      })
+    )
+  } else {
+    if (filter != null) {
+      enumGroup.enumUnitsInRange(
+        pos.x,
+        pos.y,
+        radius,
+        Filter(() => filter(Unit.fromHandle(GetFilterUnit())))
+      )
+    } else {
+      enumGroup.enumUnitsInRange(pos.x, pos.y, radius, null)
+    }
+  }
+  return enumGroup
+}
+
+// Iterate over all units in range calling the callback
 export function forUnitsInRange(
   pos: Vec2,
   radius: number,
   callback: (u: Unit) => void,
   collisionSizeFiltering: boolean = false
 ) {
-  const enumGroup = new Group()
-  if (collisionSizeFiltering) {
-    enumGroup.enumUnitsInRange(pos.x, pos.y, radius + maxCollisionSize, null)
-    enumGroup.for(() => {
-      const u = Unit.fromHandle(GetEnumUnit())
-      if (u.inRange(pos.x, pos.y, radius)) {
-        callback(u)
-      }
-    })
-  } else {
-    enumGroup.enumUnitsInRange(
-      pos.x,
-      pos.y,
-      radius,
-      Filter(() => {
-        let u = Unit.fromHandle(GetFilterUnit())
-        callback(u)
-        return false
-      })
-    )
-  }
+  const enumGroup = getUnitsInRange(pos, radius, null, collisionSizeFiltering)
+  enumGroup.for(() => {
+    callback(Unit.fromHandle(GetEnumUnit()))
+  })
   enumGroup.destroy()
+}
+
+// Get a random unit in range, matching the provided filter.
+export function getRandomUnitInRange(
+  pos: Vec2,
+  radius: number,
+  filter: (Unit) => boolean,
+  collisionSizeFiltering: boolean = false
+): Unit {
+  const enumGroup = getUnitsInRange(pos, radius, filter, collisionSizeFiltering)
+  const u = enumGroup.getUnitAt(GetRandomInt(0, enumGroup.size - 1))
+  enumGroup.destroy()
+  return u
 }
 
 // Executes a callback on the nearest unit

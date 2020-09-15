@@ -1,4 +1,12 @@
-import {Unit, Timer, Effect, Group, Trigger, Destructable} from 'w3ts/index'
+import {
+  Unit,
+  Timer,
+  Effect,
+  Group,
+  Trigger,
+  Destructable,
+  Widget,
+} from 'w3ts/index'
 import {
   PlayerAncients,
   UnitIds,
@@ -12,7 +20,10 @@ import {damageEnemiesInArea} from 'lib/damage'
 import {flashEffect} from 'lib/effect'
 import {Players} from 'w3ts/globals/index'
 import {Statemachine, State} from 'statemachine'
-import {findNearestUnit as getNearestUnit} from 'lib/groups'
+import {
+  findNearestUnit as getNearestUnit,
+  getRandomUnitInRange,
+} from 'lib/groups'
 import {forDestructablesInCircle} from 'lib/destructables'
 import {Angle} from 'lib/angle'
 import {isTerrainWalkable} from 'lib/terrain'
@@ -30,6 +41,9 @@ const chargeDistance = 1800
 const chargeWidth = 300
 const chargeSpeed = 1400
 const chargeDamage = 125
+
+const strangleDuration = 800
+const strangleDamage = 800
 
 export class TreeAncient {
   private readonly tree: Unit
@@ -81,6 +95,17 @@ export class TreeAncient {
   }
 }
 
+function pickTargetHero(tree: Unit): Unit {
+  return getRandomUnitInRange(
+    Vec2.unitPos(tree),
+    5000,
+    (u: Unit) => {
+      return u.isEnemy(PlayerAncients) && u.isHero() && u.isAlive()
+    },
+    true
+  )
+}
+
 class Attacking implements State {
   private target: Unit = null
   private duration: number = 0
@@ -122,12 +147,22 @@ class Attacking implements State {
   }
 
   private pickNextState(tree: Unit): State {
-    const rand = GetRandomReal(0, 1)
-    if (rand < 0.5) {
-      return new ChargeWarmup(tree)
-    } else {
-      return new EarthquakeWarmup(tree)
-    }
+    return Strangleroots.afterSeeking(tree)
+
+    // this.pickNewTarget(tree)
+    // const rand = GetRandomReal(0, 1)
+    // if (
+    //   Vec2.unitPos(this.target).distanceTo(Vec2.unitPos(tree)) <
+    //   earthquakeRadius
+    // ) {
+    //   if (rand < 0.5) {
+    //     return new ChargeWarmup(tree)
+    //   } else {
+    //     return new EarthquakeWarmup(tree)
+    //   }
+    // }
+
+    // return new ChargeWarmup(tree)
   }
 }
 
@@ -362,5 +397,92 @@ class Charge implements State {
     tree.setTimeScale(1)
     this.createdGroup.destroy()
     this.trgHit.destroy()
+  }
+}
+
+// A generic state that can be used make the tree get close to a target location. After the tree is
+// within the given range of a target widget, it will move to provided state. Range does include the
+// contact size of the tree.
+class Seek implements State {
+  private duration: number = 0
+  constructor(
+    private readonly target: Widget,
+    private readonly range: number,
+    private readonly nextState: State,
+    private readonly maxDuration: number = 1000
+  ) {}
+
+  update(entity: Unit): State {
+    this.duration++
+    const pos = Vec2.widgetPos(this.target)
+    if (entity.inRange(pos.x, pos.y, this.range)) {
+      return this.nextState
+    }
+    if (this.duration > this.maxDuration) {
+      return this.interrupt(entity)
+    }
+    if (ModuloInteger(this.duration, 50) == 0) {
+      print('seeking')
+      entity.issueOrderAt('move', pos.x, pos.y)
+    }
+
+    return this
+  }
+
+  interrupt(entity: Unit): State {
+    return new Attacking(entity)
+  }
+}
+
+class Strangleroots implements State {
+  private initialized: boolean = false
+  private duration: number = 0
+  constructor(private readonly target: Unit) {}
+
+  static afterSeeking(tree: Unit): State {
+    const target = pickTargetHero(tree)
+    return new Seek(target, 900, new Strangleroots(target))
+  }
+
+  update(tree: Unit): State {
+    this.duration++
+    if (!this.initialized) {
+      this.initialized = true
+      this.target.paused = true
+      tree.paused = true
+      this.target.addAbility(FourCC('BEer'))
+      // TODO facing angle?
+    }
+    if (this.duration > strangleDuration) {
+      this.cleanup(tree)
+      return new Attacking(tree)
+    }
+    if (this.duration != 0 && ModuloInteger(this.duration, 50) == 0) {
+      print("strangleroots(" + this.duration.toString() + ")")
+      const dmg = 50 * (strangleDamage / strangleDuration)
+      tree.damageTarget(
+        this.target.handle,
+        dmg,
+        0,
+        false,
+        true,
+        ATTACK_TYPE_NORMAL,
+        DAMAGE_TYPE_PLANT,
+        WEAPON_TYPE_WHOKNOWS
+      )
+    }
+
+    return this
+  }
+
+  interrupt(tree: Unit): State {
+    this.cleanup(tree)
+    return new Attacking(tree)
+  }
+
+  private cleanup(tree: Unit) {
+    this.target.paused = false
+    tree.paused = false
+    this.target.removeAbility(FourCC('BEer'))
   }
 }

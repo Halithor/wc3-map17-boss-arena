@@ -158,3 +158,117 @@ STRING 30
 Lantern
 }
 
+STRING 32
+// Abilities: A001 (Spiked Shell), Ubertip (Tooltip - Normal - Extended)
+{
+Razor-sharp spikes on the Scarab King's shell deal <A001,DataA1,%>% of an enemy unit's melee attack damage back to it.
+}
+
+STRING 33
+// Abilities: A002 (Channel Cleaned), Name (Name)
+{
+Channel Cleaned
+}
+
+STRING 34
+// Abilities: A003 (Beetle Charge), Name (Name)
+{
+Beetle Charge
+}
+
+STRING 38
+// Buffs/Effects: Bx00 (Spiked Shell), EditorName (Name (Editor Only))
+{
+Spiked Shell
+}
+
+STRING 39
+// Buffs/Effects: Bx00 (Spiked Shell), Bufftip (Tooltip)
+{
+Spiked Shell
+}
+
+STRING 41
+// Abilities: A003 (Beetle Charge), Ubertip (Tooltip - Normal - Extended)
+{
+Quickly move to the targeted location, dealing 100 damage to enemies and destroying destructables in the path.|n|n|cffaaaaaa1000 range, 12 second cooldown. Blocked by everthing except destructables.
+}
+
+STRING 42
+// Abilities: A003 (Beetle Charge), Tip (Tooltip - Normal)
+{
+Beetle Charge [|cffffcc00R|r]
+}
+
+STRING 43
+// Abilities: A003 (Beetle Charge), Hotkey (Hotkey - Normal)
+{
+R
+}
+
+STRING 44
+// Abilities: A004 (Firebolt), Hotkey (Hotkey - Normal)
+{
+Q
+}
+
+STRING 45
+// Abilities: A004 (Firebolt), Tip (Tooltip - Normal)
+{
+Heavy Smash
+}
+
+STRING 46
+// Abilities: A004 (Firebolt), Ubertip (Tooltip - Normal - Extended)
+{
+Strike a target for 250 damage and stun them briefly, |cffffcc00interrupting channeled abilities|r.|n|n|cffaaaaaa24 second cooldown.
+}
+
+STRING 47
+// Units: ndum (Dummy Caster), Name (Name)
+{
+Dummy Caster
+}
+
+STRING 48
+// Doodads: D004 (Druid's Den), Name (Name)
+{
+Druid's Den
+}
+
+STRING 49
+// Units: E002 (Fire Demon), Name (Name)
+{
+Fire Demon
+}
+
+STRING 50
+// Units: E002 (Fire Demon), Propernames (Proper Names)
+{
+Slaanik
+}
+
+STRING 52
+// Abilities: A005 (Inventory - 1 slot), Name (Name)
+{
+Inventory - 1 slot
+}
+
+STRING 53
+// Abilities: A006 (Item Reincarnation Full Life), Name (Name)
+{
+Item Reincarnation Full Life
+}
+
+STRING 54
+// Items: I000 (Lives), Ubertip (Tooltip - Extended)
+{
+Brings the hero back to life with full health and mana 10 seconds after death. Start the game with two lives.
+}
+
+STRING 55
+// Items: I000 (Lives), Name (Name)
+{
+Lives
+}
+

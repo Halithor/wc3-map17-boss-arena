@@ -1,5 +1,5 @@
 import {Unit, Trigger, Region, Rectangle, FogModifier} from 'w3ts/index'
-import {UnitIds, PlayerAncients, PlayerOne, PlayerTwo} from 'constants'
+import {UnitIds, PlayerAncients, PlayerOne, PlayerTwo, ItemIds} from 'constants'
 import {Players} from 'w3ts/globals/index'
 import {TreeAncient} from 'treeAncient'
 
@@ -25,19 +25,32 @@ export class Game {
     this.startEncounter.addAction(() => this.onStartEncounter())
 
     this.spawnPlayers()
+    this.setupOnePlayerSettings()
   }
 
   private spawnPlayers() {
     let scarab = new Unit(
       PlayerOne,
       UnitIds.ScarabKing,
-      GetRectCenterX(gg_rct_HeroSpawn),
-      GetRectCenterY(gg_rct_HeroSpawn),
+      GetRectCenterX(gg_rct_PlayerOneSpawn),
+      GetRectCenterY(gg_rct_PlayerOneSpawn),
       90
     )
     SelectUnitForPlayerSingle(scarab.handle, scarab.owner.handle)
     SetCameraPositionForPlayer(scarab.owner.handle, scarab.x, scarab.y)
     // TODO: Other player
+    let demon = new Unit(
+      PlayerTwo,
+      UnitIds.FireDemon,
+      GetRectCenterX(gg_rct_PlayerTwoSpawn),
+      GetRectCenterY(gg_rct_PlayerTwoSpawn),
+      90
+    )
+    SelectUnitForPlayerSingle(demon.handle, demon.owner.handle)
+    SetCameraPositionForPlayer(PlayerTwo.handle, demon.x, demon.y)
+    // Ahnks
+    scarab.addItemById(ItemIds.Ahnk)
+    demon.addItemById(ItemIds.Ahnk)
   }
 
   private createVision() {
@@ -71,6 +84,21 @@ export class Game {
       true
     )
     p2Vision.start()
+  }
+
+  // Debug function for one player play
+  private setupOnePlayerSettings() {
+    if (
+      PlayerTwo.slotState != PLAYER_SLOT_STATE_PLAYING ||
+      PlayerTwo.controller != MAP_CONTROL_USER
+    ) {
+      SetPlayerAllianceStateControlBJ(PlayerTwo.handle, PlayerOne.handle, true)
+      SetPlayerAllianceStateFullControlBJ(
+        PlayerTwo.handle,
+        PlayerOne.handle,
+        true
+      )
+    }
   }
 
   private onStartEncounter() {
