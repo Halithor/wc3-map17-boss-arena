@@ -158,22 +158,10 @@ STRING 30
 Lantern
 }
 
-STRING 32
-// Abilities: A001 (Spiked Shell), Ubertip (Tooltip - Normal - Extended)
-{
-Razor-sharp spikes on the Scarab King's shell deal <A001,DataA1,%>% of an enemy unit's melee attack damage back to it.
-}
-
 STRING 33
 // Abilities: A002 (Channel Cleaned), Name (Name)
 {
 Channel Cleaned
-}
-
-STRING 34
-// Abilities: A003 (Beetle Charge), Name (Name)
-{
-Beetle Charge
 }
 
 STRING 38
@@ -189,39 +177,21 @@ Spiked Shell
 }
 
 STRING 41
-// Abilities: A003 (Beetle Charge), Ubertip (Tooltip - Normal - Extended)
+// Abilities: A003 (Carrion Charge), Ubertip (Tooltip - Normal - Extended)
 {
 Quickly move to the targeted location, dealing 100 damage to enemies and destroying destructables in the path.|n|n|cffaaaaaa1000 range, 12 second cooldown. Blocked by everthing except destructables.
 }
 
-STRING 42
-// Abilities: A003 (Beetle Charge), Tip (Tooltip - Normal)
-{
-Beetle Charge [|cffffcc00R|r]
-}
-
 STRING 43
-// Abilities: A003 (Beetle Charge), Hotkey (Hotkey - Normal)
+// Abilities: A003 (Carrion Charge), Hotkey (Hotkey - Normal)
 {
 R
 }
 
 STRING 44
-// Abilities: A004 (Firebolt), Hotkey (Hotkey - Normal)
+// Abilities: A008 (Heavy Bash), Hotkey (Hotkey - Normal)
 {
 Q
-}
-
-STRING 45
-// Abilities: A004 (Firebolt), Tip (Tooltip - Normal)
-{
-Heavy Smash
-}
-
-STRING 46
-// Abilities: A004 (Firebolt), Ubertip (Tooltip - Normal - Extended)
-{
-Strike a target for 250 damage and stun them briefly, |cffffcc00interrupting channeled abilities|r.|n|n|cffaaaaaa24 second cooldown.
 }
 
 STRING 47
@@ -234,5 +204,329 @@ STRING 48
 // Doodads: D004 (Druid's Den), Name (Name)
 {
 Druid's Den
+}
+
+STRING 49
+// Units: E002 (Fire Demon), Name (Name)
+{
+Fire Demon
+}
+
+STRING 50
+// Units: E002 (Fire Demon), Propernames (Proper Names)
+{
+Slaanik
+}
+
+STRING 52
+// Abilities: A005 (Inventory - 1 slot), Name (Name)
+{
+Inventory - 1 slot
+}
+
+STRING 53
+// Abilities: A006 (Item Reincarnation Full Life), Name (Name)
+{
+Item Reincarnation Full Life
+}
+
+STRING 54
+// Items: I000 (Lives), Ubertip (Tooltip - Extended)
+{
+Brings the hero back to life with full health and mana 10 seconds after death. Start the game with two lives.
+}
+
+STRING 55
+// Items: I000 (Lives), Name (Name)
+{
+Lives
+}
+
+STRING 56
+// Abilities: A007 (Effect), EditorSuffix (Editor Suffix)
+{
+(Roots Buff)
+}
+
+STRING 57
+// Abilities: A007 (Effect), Name (Name)
+{
+Effect
+}
+
+STRING 58
+// Buffs/Effects: B000 (), Bufftip (Tooltip)
+{
+Strangleroots
+}
+
+STRING 59
+// Buffs/Effects: B000 (), EditorSuffix (Editor Suffix)
+{
+ (Roots Buff)
+}
+
+STRING 60
+// Buffs/Effects: B000 (), Buffubertip (Tooltip - Extended)
+{
+This unit is being strangled by the Ancient; it cannot act and is taking persistent damage.
+}
+
+STRING 62
+// Abilities: A008 (Heavy Bash), Name (Name)
+{
+Heavy Bash
+}
+
+STRING 63
+// Abilities: A008 (Heavy Bash), Tip (Tooltip - Normal)
+{
+Heavy Smash [|cffffcc00Q|r]
+}
+
+STRING 64
+// Abilities: A008 (Heavy Bash), Ubertip (Tooltip - Normal - Extended)
+{
+Strike the targeted enemy for 200 damage and stun them for 2 seconds.|n|n|cffffcc00Interrupts channeled abilities!|n|cffaaaaaaMelee range, 16 second cooldown.
+}
+
+STRING 65
+// Abilities: A004 (Beetle Juice), Hotkey (Hotkey - Normal)
+{
+D
+}
+
+STRING 66
+// Abilities: A004 (Beetle Juice), Name (Name)
+{
+Beetle Juice
+}
+
+STRING 67
+// Units: o000 (Juice Pool), Name (Name)
+{
+Juice Pool
+}
+
+STRING 68
+// Abilities: A003 (Carrion Charge), Name (Name)
+{
+Carrion Charge
+}
+
+STRING 69
+// Abilities: A003 (Carrion Charge), Tip (Tooltip - Normal)
+{
+Carrion Charge [|cffffcc00R|r]
+}
+
+STRING 70
+// Abilities: A004 (Beetle Juice), Tip (Tooltip - Normal)
+{
+Beetle Juice [|cffffcc00D|r]
+}
+
+STRING 71
+// Abilities: A004 (Beetle Juice), Ubertip (Tooltip - Normal - Extended)
+{
+Create a pool of vile liquid on the ground, damaging enemies and healing allies in the area for 25 life each second.|n|n|cffaaaaaaLasts 8 seconds, 500 range, 30 second cooldown.
+}
+
+STRING 74
+// Abilities: A00A (Beelte Juice Aura (Allies)), Name (Name)
+{
+Beelte Juice Aura (Allies)
+}
+
+STRING 75
+// Abilities: A00A (Beelte Juice Aura (Allies)), Tip (Tooltip - Normal)
+{
+Beelte Juice Aura (Allies)
+}
+
+STRING 76
+// Abilities: A00B (Beelte Juice Aura (Enemies)), Name (Name)
+{
+Beelte Juice Aura (Enemies)
+}
+
+STRING 77
+// Abilities: A00B (Beelte Juice Aura (Enemies)), Tip (Tooltip - Normal)
+{
+Beelte Juice Aura (Allies)
+}
+
+STRING 78
+// Buffs/Effects: B001 (Beetle Juice), EditorName (Name (Editor Only))
+{
+Beetle Juice
+}
+
+STRING 79
+// Abilities: A00C (Carapace), Name (Name)
+{
+Carapace
+}
+
+STRING 80
+// Abilities: A00C (Carapace), Hotkey (Hotkey - Normal)
+{
+E
+}
+
+STRING 81
+// Abilities: A00C (Carapace), Tip (Tooltip - Normal)
+{
+Activate Carapace [|cffffcc00E|r]
+}
+
+STRING 82
+// Abilities: A00C (Carapace), Ubertip (Tooltip - Normal - Extended)
+{
+Increase the Scarab King's armor dramatically for 3 seconds.|n|n|cffaaaaaa3 second duration, 10 second cooldown. All boss damage is reduced by armor.
+}
+
+STRING 83
+// Buffs/Effects: B002 (), Bufftip (Tooltip)
+{
+Carapace
+}
+
+STRING 84
+// Buffs/Effects: B002 (), Buffubertip (Tooltip - Extended)
+{
+This unit is effected by Carapace; its armor is increased.
+}
+
+STRING 85
+// Abilities: A001 (Spiked Shell), Ubertip (Tooltip - Normal - Extended)
+{
+Razor-sharp spikes on the Scarab King's shell deal <A001,DataA1,%>% of an enemy unit's melee attack damage back to it.|n|n|cffaaaaaaClose range boss abilities are reflected.
+}
+
+STRING 86
+// Abilities: A00D (Trail of Flame), Name (Name)
+{
+Trail of Flame
+}
+
+STRING 87
+// Buffs/Effects: B003 (), Bufftip (Tooltip)
+{
+Trail of Flame
+}
+
+STRING 88
+// Abilities: A00D (Trail of Flame), Ubertip (Tooltip - Normal - Extended)
+{
+The Demon imbues his steps with burning fire, increasing movement speed by 33%, allowing him to walk over obstacles, and leaving a trail of burning fire in his wake. Fire deals 20 damage per second to units caught within it.|n|n|cffaaaaaa6 second duration, 18 second cooldown. Fire trail persists for 10 seconds.
+}
+
+STRING 90
+// Buffs/Effects: B003 (), Buffubertip (Tooltip - Extended)
+{
+This unit's steps are imbued with fire; it has increased movement speed, can move over obstacles, and leaves a trail of burning fire.
+}
+
+STRING 92
+// Abilities: A00D (Trail of Flame), Tip (Tooltip - Normal)
+{
+Trail of Flame [|cffffcc00R|r]
+}
+
+STRING 93
+// Abilities: A00D (Trail of Flame), Hotkey (Hotkey - Normal)
+{
+R
+}
+
+STRING 94
+// Abilities: A00E (Firewave), Name (Name)
+{
+Firewave
+}
+
+STRING 95
+// Abilities: A00E (Firewave), Hotkey (Hotkey - Normal)
+{
+Q
+}
+
+STRING 96
+// Abilities: A00E (Firewave), Tip (Tooltip - Normal)
+{
+Firewave [|cffffcc00Q|r]
+}
+
+STRING 97
+// Abilities: A00E (Firewave), Ubertip (Tooltip - Normal - Extended)
+{
+The demon simultaneously launches 4 fireballs in an arc toward the targeted location. Each fireball explodes on impact with any unit or destructible or upon reaching the target destination, dealing 100 damage in a small area and destroying destructibles.|n|n|cffaaaaaa16 second cooldown.
+}
+
+STRING 98
+// Abilities: A00F (Hearth's Embrace), Hotkey (Hotkey - Normal)
+{
+D
+}
+
+STRING 99
+// Abilities: A00F (Hearth's Embrace), Name (Name)
+{
+Hearth's Embrace
+}
+
+STRING 100
+// Abilities: A00F (Hearth's Embrace), Tip (Tooltip - Normal)
+{
+Hearth's Embrace [|cffcc00D|r]
+}
+
+STRING 101
+// Abilities: A00F (Hearth's Embrace), Ubertip (Tooltip - Normal - Extended)
+{
+Embrace the targeted unit in the embrace of the hearth, stunning them for 3 seconds, but healing them for 200 life and 50 mana over the next 6 seconds.|n|n|cffffcc00Interrupts channeled abilities!|n|cffaaaaaa24 second cooldown.
+}
+
+STRING 102
+// Abilities: A00G (Enraging Heat), Tip (Tooltip - Normal)
+{
+Enraging Heat [|cffffcc00F|r]
+}
+
+STRING 103
+// Abilities: A00G (Enraging Heat), Name (Name)
+{
+Enraging Heat
+}
+
+STRING 104
+// Abilities: A00G (Enraging Heat), Ubertip (Tooltip - Normal - Extended)
+{
+Spark a firey rage in the target ally, increasing attack speed by 50%, but dealing 8 damage every second.|n|n|cffaaaaaaLasts 12 seconds, 6 second cooldown.
+}
+
+STRING 105
+// Buffs/Effects: B004 (), Bufftip (Tooltip)
+{
+Enraging Heat
+}
+
+STRING 106
+// Buffs/Effects: B004 (), Buffubertip (Tooltip - Extended)
+{
+This unit has Enraging Heat; its attack rate is increased, but it takes damage over time.
+}
+
+STRING 107
+// Buffs/Effects: B005 (), Bufftip (Tooltip)
+{
+Hearth's Embrace
+}
+
+STRING 108
+// Buffs/Effects: B005 (), Buffubertip (Tooltip - Extended)
+{
+This unit has felt the Hearth's Embrace; it is healing hit points and mana over time.
 }
 

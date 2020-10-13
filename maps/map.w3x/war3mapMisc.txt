@@ -4,8 +4,12 @@ AgiDefenseBase=0.0
 AgiDefenseBonus=0.0
 FollowRange=100.0
 IntRegenBonus=0.0
+MaxBldgSpeed=522.0
 MaxGuardDistance=3000.0
 MaxHeroLevel=1
+MaxUnitSpeed=522.0
+MinBldgSpeed=0.0
+MinUnitSpeed=10.0
 StrAttackBonus=1.0
 StrRegenBonus=0.0
 

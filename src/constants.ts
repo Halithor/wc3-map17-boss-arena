@@ -15,6 +15,8 @@ export class UnitIds {
   static readonly RockGolemMob = FourCC('n000')
 
   static readonly Dummy = FourCC('ndum')
+
+  static readonly TrailOfFireWard = FourCC('o001')
 }
 
 export class DestructableIds {
@@ -31,4 +33,14 @@ export class DestructableIds {
 
 export class ItemIds {
   static readonly Ahnk = FourCC('I000')
+}
+
+export class AbilityIds {
+  static readonly CarrionCharge = FourCC('A003')
+  static readonly HeavyBash = FourCC('A008')
+
+  static readonly Firewave = FourCC('A00E')
+  static readonly Flamestrike = FourCC('A00I')
+  static readonly HearthsEmbrace = FourCC('A00F')
+  static readonly TrailOfFlame = FourCC('A00D')
 }

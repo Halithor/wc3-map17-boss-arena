@@ -5,8 +5,8 @@ gg_rct_StatueNE = nil
 gg_rct_StatueNW = nil
 gg_rct_StatueSE = nil
 gg_rct_StatueSW = nil
-gg_trg_Untitled_Trigger_001 = nil
 gg_rct_PlayerTwoSpawn = nil
+gg_trg_Untitled_Trigger_001 = nil
 function InitGlobals()
 end
 

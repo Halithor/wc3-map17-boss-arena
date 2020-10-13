@@ -27,6 +27,7 @@ import {
 import {forDestructablesInCircle} from 'lib/destructables'
 import {Angle} from 'lib/angle'
 import {isTerrainWalkable} from 'lib/terrain'
+import {Lightning, LightningType} from 'lib/lightning'
 
 const updateDelta = 0.01
 
@@ -147,22 +148,23 @@ class Attacking implements State {
   }
 
   private pickNextState(tree: Unit): State {
-    return Strangleroots.afterSeeking(tree)
 
-    // this.pickNewTarget(tree)
-    // const rand = GetRandomReal(0, 1)
-    // if (
-    //   Vec2.unitPos(this.target).distanceTo(Vec2.unitPos(tree)) <
-    //   earthquakeRadius
-    // ) {
-    //   if (rand < 0.5) {
-    //     return new ChargeWarmup(tree)
-    //   } else {
-    //     return new EarthquakeWarmup(tree)
-    //   }
-    // }
-
-    // return new ChargeWarmup(tree)
+    this.pickNewTarget(tree)
+    const rand = GetRandomReal(0, 1)
+    if (
+      Vec2.unitPos(this.target).distanceTo(Vec2.unitPos(tree)) <
+      earthquakeRadius
+    ) {
+      if (rand < 0.5) {
+        return new ChargeWarmup(tree)
+      } else {
+        return new EarthquakeWarmup(tree)
+      }
+    }
+    if (tree.life / tree.maxLife < 0.5 && rand < 0.33) {
+      return Strangleroots.afterSeeking(tree)
+    }
+    return new ChargeWarmup(tree)
   }
 }
 
@@ -219,8 +221,9 @@ class Earthquake implements State {
       Vec2.unitPos(tree),
       earthquakeRadius,
       earthquakeDamage,
-      ATTACK_TYPE_NORMAL,
-      DAMAGE_TYPE_PLANT,
+      false,
+      ATTACK_TYPE_MELEE,
+      DAMAGE_TYPE_NORMAL,
       WEAPON_TYPE_WHOKNOWS
     )
     flashEffect(earthquakeEffect, Vec2.unitPos(tree), 2)
@@ -320,7 +323,7 @@ class Charge implements State {
           true,
           false,
           ATTACK_TYPE_MELEE,
-          DAMAGE_TYPE_PLANT,
+          DAMAGE_TYPE_NORMAL,
           WEAPON_TYPE_WHOKNOWS
         )
       }
@@ -437,11 +440,13 @@ class Seek implements State {
 class Strangleroots implements State {
   private initialized: boolean = false
   private duration: number = 0
+  private lightning: Lightning
+
   constructor(private readonly target: Unit) {}
 
   static afterSeeking(tree: Unit): State {
     const target = pickTargetHero(tree)
-    return new Seek(target, 900, new Strangleroots(target))
+    return new Seek(target, 700, new Strangleroots(target))
   }
 
   update(tree: Unit): State {
@@ -450,7 +455,12 @@ class Strangleroots implements State {
       this.initialized = true
       this.target.paused = true
       tree.paused = true
-      this.target.addAbility(FourCC('BEer'))
+      this.target.addAbility(FourCC('A007'))
+      this.lightning = new Lightning(
+        LightningType.HealingWavePrimary,
+        Vec2.unitPos(tree),
+        Vec2.unitPos(this.target)
+      )
       // TODO facing angle?
     }
     if (this.duration > strangleDuration) {
@@ -458,7 +468,7 @@ class Strangleroots implements State {
       return new Attacking(tree)
     }
     if (this.duration != 0 && ModuloInteger(this.duration, 50) == 0) {
-      print("strangleroots(" + this.duration.toString() + ")")
+      print('strangleroots(' + this.duration.toString() + ')')
       const dmg = 50 * (strangleDamage / strangleDuration)
       tree.damageTarget(
         this.target.handle,
@@ -467,9 +477,12 @@ class Strangleroots implements State {
         false,
         true,
         ATTACK_TYPE_NORMAL,
-        DAMAGE_TYPE_PLANT,
+        DAMAGE_TYPE_NORMAL,
         WEAPON_TYPE_WHOKNOWS
       )
+      if (!this.target.isAlive()) {
+        return this.interrupt(tree)
+      }
     }
 
     return this
@@ -483,6 +496,7 @@ class Strangleroots implements State {
   private cleanup(tree: Unit) {
     this.target.paused = false
     tree.paused = false
-    this.target.removeAbility(FourCC('BEer'))
+    this.target.removeAbility(FourCC('A007'))
+    this.lightning.destroy()
   }
 }

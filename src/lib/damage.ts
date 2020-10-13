@@ -7,6 +7,7 @@ export function damageEnemiesInArea(
   pos: Vec2,
   radius: number,
   amount: number,
+  ranged: boolean,
   attackType: attacktype,
   damageType: damagetype,
   weaponType: weapontype
@@ -22,7 +23,7 @@ export function damageEnemiesInArea(
           amount,
           0,
           true,
-          false,
+          ranged,
           attackType,
           damageType,
           weaponType

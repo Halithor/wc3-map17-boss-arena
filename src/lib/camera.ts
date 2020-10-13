@@ -1,5 +1,6 @@
-import {MapPlayer, Trigger} from 'w3ts/index'
+import {MapPlayer, Trigger, Timer} from 'w3ts/index'
 import {Players} from 'w3ts/globals/index'
+import {PlayerOne, PlayerTwo} from 'constants'
 
 // Divide by 100 to account for the percentage aspect of our system
 const camDistanceBase: number = 1650 / 100.0
@@ -16,6 +17,7 @@ class PlayerCameraSetting {
 export class CameraSystem {
   private trg: Trigger
   private settings: PlayerCameraSetting[] = []
+  private timer: Timer
 
   constructor() {
     this.trg = new Trigger()
@@ -42,7 +44,27 @@ export class CameraSystem {
           .trim()
       }
       this.settings[speaker.id].distance = S2R(message)
-      // DisplayTimedTextToPlayer(speaker.handle, 0, 0, 10, string.)
+      DisplayTimedTextToPlayer(
+        speaker.handle,
+        0,
+        0,
+        10,
+        'Setting camera to ' +
+          this.settings[speaker.id].distance.toString() +
+          '% distance' +
+          (this.settings[speaker.id].locked ? 'Camera locked.' : '')
+      )
+      this.updatePlayerCamera(speaker, false)
+    })
+
+    this.timer = new Timer()
+    this.timer.start(0.03, true, () => {
+      if (this.settings[PlayerOne.id].locked) {
+        this.updatePlayerCamera(PlayerOne, true)
+      }
+      if (this.settings[PlayerTwo.id].locked) {
+        this.updatePlayerCamera(PlayerTwo, true)
+      }
     })
   }
 
