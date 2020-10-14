@@ -24,8 +24,9 @@ const attackDamage = 125
 const attackMinFlightTime = 1.6
 
 let summonCount = 1
-const mobSummonChanceFactor = 8
-const mobsSummonWarmup = 135
+let summonResetUsed = false
+const mobSummonChanceFactor = 7
+const mobsSummonWarmup = 125
 const mobsSummonArea = 225
 
 const laserArea = 125
@@ -34,6 +35,8 @@ const laserDuration = 800
 const laserDelay = 150
 const laserTrailDuration = 10
 const laserSpeed = 320
+
+let titansCalled = false
 
 let moveRects: rect[]
 
@@ -50,6 +53,8 @@ export class Spirit {
       270
     )
     summonCount = 1
+    summonResetUsed = false
+    titansCalled = false
   }
 
   start() {
@@ -78,6 +83,22 @@ class PickNextState implements State {
   constructor(private lastState: State) {}
 
   update(spirit: Unit): State {
+    // Make the spirit go summon crazy again at low life.
+    if (spirit.life / spirit.maxLife < 0.4 && !summonResetUsed) {
+      summonCount = 1
+      summonResetUsed = true
+    }
+
+    if (spirit.life / spirit.maxLife < 0.25 && !titansCalled) {
+      if (
+        getRectCenter(gg_rct_Boss_Spawn).distanceTo(Vec2.unitPos(spirit)) > 500
+      ) {
+        return new Move(spirit, getRectCenter(gg_rct_Boss_Spawn))
+      }
+      titansCalled = true
+      return new CallTitans()
+    }
+
     const rand = math.random()
     if (!(this.lastState instanceof Move) && math.random() < 0.4) {
       return new Move(spirit)
@@ -381,6 +402,49 @@ class Lasers implements State {
         laser.lighting.destroy()
       }
     })
+  }
+}
+
+class CallTitans implements State {
+  update(entity: Unit): State {
+    print('Titans of the Athen Lorel, defend this grove!')
+    const mountain = new Unit(
+      entity.owner,
+      UnitIds.TitanMountain,
+      GetRectCenterX(gg_rct_StatueSW),
+      GetRectCenterY(gg_rct_StatueSW),
+      45
+    )
+    const forest = new Unit(
+      entity.owner,
+      UnitIds.TitanForest,
+      GetRectCenterX(gg_rct_StatueSE),
+      GetRectCenterY(gg_rct_StatueSE),
+      135
+    )
+    const sky = new Unit(
+      entity.owner,
+      UnitIds.TitanSky,
+      GetRectCenterX(gg_rct_StatueNE),
+      GetRectCenterY(gg_rct_StatueNE),
+      225
+    )
+    const water = new Unit(
+      entity.owner,
+      UnitIds.TitanWater,
+      GetRectCenterX(gg_rct_StatueNW),
+      GetRectCenterY(gg_rct_StatueNW),
+      315
+    )
+    const center = getRectCenter(gg_rct_Boss_Spawn)
+    mountain.issueOrderAt('attack', center.x, center.y)
+    forest.issueOrderAt('attack', center.x, center.y)
+    sky.issueOrderAt('attack', center.x, center.y)
+    water.issueOrderAt('attack', center.x, center.y)
+    return new PickNextState(this)
+  }
+  interrupt(entity: Unit): State {
+    return new PickNextState(this)
   }
 }
 

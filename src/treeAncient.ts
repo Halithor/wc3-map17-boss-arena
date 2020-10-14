@@ -560,7 +560,6 @@ class SummonWisps implements State {
           pos
         )
       }
-      print('wisps made')
       let count = 0
       const cancel = doPeriodically(
         0.02,
@@ -592,7 +591,6 @@ class SummonWisps implements State {
           entity.invulnerable = false
         }
       )
-      print('timer setup')
       wispCleanup = () => {
         cancel()
         this.wisps.forEach((wisp) => {
@@ -601,7 +599,6 @@ class SummonWisps implements State {
           }
         })
       }
-      print('done with wisps')
       return new PickNextState(this)
     }
 

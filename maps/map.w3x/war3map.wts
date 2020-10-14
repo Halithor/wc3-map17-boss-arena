@@ -767,3 +767,51 @@ STRING 168
 Strike the enemy with a poisoned attack, dealing 75 damage and 15 damage every second for 6 seconds. The poison slows the attack, spell channel, and movement rate of the target slightly.|n|n|cffaaaaaaLasts 6 seconds, 18 second cooldown. 15% reduction to spell cast speed, attack speed, and move speed.
 }
 
+STRING 169
+// Units: e005 (Mountain Titan), Name (Name)
+{
+Mountain Titan
+}
+
+STRING 170
+// Units: e005 (Mountain Titan), Tip (Tooltip - Basic)
+{
+Mountain Titan
+}
+
+STRING 173
+// Units: e007 (Forest Titan), Name (Name)
+{
+Forest Titan
+}
+
+STRING 174
+// Units: e007 (Forest Titan), Tip (Tooltip - Basic)
+{
+Forest Titan
+}
+
+STRING 177
+// Units: e008 (Sky Titan), Name (Name)
+{
+Sky Titan
+}
+
+STRING 178
+// Units: e008 (Sky Titan), Tip (Tooltip - Basic)
+{
+Sky Titan
+}
+
+STRING 179
+// Units: e006 (River Titan), Name (Name)
+{
+River Titan
+}
+
+STRING 180
+// Units: e006 (River Titan), Tip (Tooltip - Basic)
+{
+River Titan
+}
+

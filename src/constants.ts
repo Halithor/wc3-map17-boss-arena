@@ -19,6 +19,11 @@ export class UnitIds {
 
   static readonly TrailOfFireWard = FourCC('o001')
   static readonly LaserTrailWard = FourCC('o002')
+
+  static readonly TitanMountain = FourCC('e005')
+  static readonly TitanWater = FourCC('e006')
+  static readonly TitanForest = FourCC('e007')
+  static readonly TitanSky = FourCC('e008')
 }
 
 export class DestructableIds {
