@@ -30,6 +30,7 @@ const chargeWidth = 330
 const chargeSpeed = 1600
 const chargeDamage = 200
 
+let strangleDelay = 0
 const strangleDuration = 800
 const strangleDamage = 1200
 
@@ -99,6 +100,7 @@ function pickTargetHero(tree: Unit): Unit {
 class PickNextState implements State {
   constructor(private lastState: State) {}
   update(entity: Unit): State {
+    strangleDelay--
     const target = getNearestUnit(
       Vec2.unitPos(entity),
       6000,
@@ -117,7 +119,12 @@ class PickNextState implements State {
     ) {
       return new EarthquakeWarmup(entity)
     }
-    if (entity.life / entity.maxLife < 0.5 && math.random() < 0.5) {
+    if (
+      entity.life / entity.maxLife < 0.5 &&
+      math.random() < 0.5 &&
+      strangleDelay < 0
+    ) {
+      strangleDelay = 3
       return Strangleroots.afterSeeking(entity)
     }
     return new ChargeWarmup(entity)
@@ -142,7 +149,7 @@ class Attacking implements State {
         tree.issueTargetOrder('attack', this.target)
       }
     }
-    if (this.duration > 600) {
+    if (this.duration > 700) {
       return new PickNextState(this)
     }
     return this

@@ -80,20 +80,16 @@ class PickNextState implements State {
   update(spirit: Unit): State {
     const rand = math.random()
     if (!(this.lastState instanceof Move) && math.random() < 0.4) {
-      print('move')
       return new Move(spirit)
     }
     if (math.random() < mobSummonChanceFactor / summonCount) {
-      print('summon')
       summonCount++
       return new SummonMobs()
     }
     // Only after the summons have happend does the laser start replacing them
     if (rand < 0.5 && spirit.life / spirit.maxLife < 0.6) {
-      print('laser')
       return new Lasers(spirit)
     }
-    print('attacking')
     return new Attacking()
   }
 
