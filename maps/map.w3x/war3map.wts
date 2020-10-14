@@ -731,12 +731,6 @@ STRING 158
 Spirit Guardian
 }
 
-STRING 161
-// Abilities: A00J (Poison Strike), Ubertip (Tooltip - Normal - Extended)
-{
-Strike the enemy with a poisoned attack, dealing 75 damage and 15 damage every second for 6 seconds. The poison slows the attack, spell channel, and movement rate of the target slightly.|n|n|cffaaaaaaLasts 6 seconds, 12 second cooldown. 15% reduction to spell cast speed, attack speed, and move speed.
-}
-
 STRING 162
 // Abilities: A00Q (Wisp Attack - Stunner), Tip (Tooltip - Normal)
 {
@@ -765,5 +759,11 @@ STRING 167
 // Units: o002 (Laser Trail), Name (Name)
 {
 Laser Trail
+}
+
+STRING 168
+// Abilities: A00J (Poison Strike), Ubertip (Tooltip - Normal - Extended)
+{
+Strike the enemy with a poisoned attack, dealing 75 damage and 15 damage every second for 6 seconds. The poison slows the attack, spell channel, and movement rate of the target slightly.|n|n|cffaaaaaaLasts 6 seconds, 18 second cooldown. 15% reduction to spell cast speed, attack speed, and move speed.
 }
 

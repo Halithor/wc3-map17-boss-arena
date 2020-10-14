@@ -61,7 +61,13 @@ export class Game {
     this.gameOver.registerAnyUnitEvent(EVENT_PLAYER_UNIT_DEATH)
     let gameOver = false
     this.gameOver.addAction(() => {
-      if (!this.scarab.isAlive() && !this.demon.isAlive() && !gameOver) {
+      const dying = Unit.fromHandle(GetTriggerUnit())
+      if (
+        (dying.isUnit(this.scarab) || dying.isUnit(this.demon)) &&
+        !this.scarab.isAlive() &&
+        !this.demon.isAlive() &&
+        !gameOver
+      ) {
         gameOver = true
         print('It seems the forest is victorious today...')
         doAfter(2.0, () => {

@@ -94,6 +94,40 @@ function pickTargetHero(tree: Unit): Unit {
   )
 }
 
+// PickNextState state selects a new state in one update cycle, based on the previous state and
+// qualities of the treeant.
+class PickNextState implements State {
+  constructor(private lastState: State) {}
+  update(entity: Unit): State {
+    const target = getNearestUnit(
+      Vec2.unitPos(entity),
+      6000,
+      Filter(() => {
+        const u = Unit.fromHandle(GetFilterUnit())
+        return u.isEnemy(PlayerAncients) && u.isAlive() && u.isHero()
+      })
+    )
+    if (!(this.lastState instanceof Attacking) && math.random() < 0.6) {
+      return new Attacking(entity)
+    }
+    if (
+      Vec2.unitPos(target).distanceTo(Vec2.unitPos(entity)) <
+        earthquakeRadius &&
+      math.random() < 0.4
+    ) {
+      return new EarthquakeWarmup(entity)
+    }
+    if (entity.life / entity.maxLife < 0.5 && math.random() < 0.5) {
+      return Strangleroots.afterSeeking(entity)
+    }
+    return new ChargeWarmup(entity)
+  }
+
+  interrupt(entity: Unit): State {
+    return this
+  }
+}
+
 class Attacking implements State {
   private target: Unit = null
   private duration: number = 0
@@ -108,8 +142,8 @@ class Attacking implements State {
         tree.issueTargetOrder('attack', this.target)
       }
     }
-    if (this.duration > 700) {
-      return this.pickNextState(tree)
+    if (this.duration > 600) {
+      return new PickNextState(this)
     }
     return this
   }
@@ -119,7 +153,6 @@ class Attacking implements State {
   }
 
   private pickNewTarget(tree: Unit) {
-    // TODO: Handle null target in Attacking
     this.target = getNearestUnit(
       Vec2.unitPos(tree),
       3000,
@@ -128,22 +161,6 @@ class Attacking implements State {
         return u.isEnemy(PlayerAncients) && u.isAlive()
       })
     )
-  }
-
-  private pickNextState(tree: Unit): State {
-    this.pickNewTarget(tree)
-    const rand = GetRandomReal(0, 1)
-    if (
-      Vec2.unitPos(this.target).distanceTo(Vec2.unitPos(tree)) <
-        earthquakeRadius &&
-      rand < 0.5
-    ) {
-      return new EarthquakeWarmup(tree)
-    }
-    if (tree.life / tree.maxLife < 0.5 && rand < 0.5) {
-      return Strangleroots.afterSeeking(tree)
-    }
-    return new ChargeWarmup(tree)
   }
 }
 
@@ -183,7 +200,7 @@ class EarthquakeWarmup implements State {
   interrupt(tree: Unit): State {
     this.indicator.remove()
     tree.paused = false
-    return new Attacking(tree)
+    return new PickNextState(this)
   }
 }
 
@@ -207,7 +224,7 @@ class Earthquake implements State {
     // undo the start of earthquake
     tree.paused = false
     this.indicator.remove()
-    return new Attacking(tree)
+    return new PickNextState(this)
   }
 
   interrupt(entity: Unit): State {
@@ -261,7 +278,7 @@ class ChargeWarmup implements State {
   interrupt(entity: Unit): State {
     this.indicator.remove()
     entity.paused = false
-    return new Attacking(entity)
+    return new PickNextState(this)
   }
 }
 
@@ -309,7 +326,7 @@ class Charge implements State {
     const nextPos = pos.moveTowards(this.targetPos, tickSpeed)
     if (!isTerrainWalkable(nextPos)) {
       this.cleanup(entity)
-      return new Attacking(entity)
+      return new PickNextState(this)
     }
     entity.x = nextPos.x
     entity.y = nextPos.y
@@ -355,14 +372,14 @@ class Charge implements State {
 
     if (nextPos.distanceToSq(this.targetPos) < tickSpeed * tickSpeed) {
       this.cleanup(entity)
-      return new Attacking(entity)
+      return new PickNextState(this)
     }
     return this
   }
 
   interrupt(entity: Unit): State {
     this.cleanup(entity)
-    return new Attacking(entity)
+    return new PickNextState(this)
   }
 
   private cleanup(tree: Unit) {
@@ -403,7 +420,7 @@ class Seek implements State {
   }
 
   interrupt(entity: Unit): State {
-    return new Attacking(entity)
+    return new PickNextState(this)
   }
 }
 
@@ -420,6 +437,18 @@ class Strangleroots implements State {
   }
 
   update(tree: Unit): State {
+    // strangle every 1 second, before duration increment to start with it
+    if (this.duration % 100 == 0) {
+      castTarget(
+        tree.owner,
+        AbilityIds.DummyStrangleroots,
+        1,
+        'entanglingroots',
+        this.target,
+        Vec2.unitPos(tree)
+      )
+    }
+
     this.duration++
     if (!this.initialized) {
       this.initialized = true
@@ -434,18 +463,7 @@ class Strangleroots implements State {
     }
     if (this.duration > strangleDuration) {
       this.cleanup(tree)
-      return new Attacking(tree)
-    }
-    // strangle every 1 second
-    if (this.duration % 100 == 0) {
-      castTarget(
-        tree.owner,
-        AbilityIds.DummyStrangleroots,
-        1,
-        'entanglingroots',
-        this.target,
-        Vec2.unitPos(tree)
-      )
+      return new PickNextState(this)
     }
     if (this.duration != 0 && ModuloInteger(this.duration, 50) == 0) {
       const dmg = 50 * (strangleDamage / strangleDuration)
@@ -469,7 +487,7 @@ class Strangleroots implements State {
 
   interrupt(tree: Unit): State {
     this.cleanup(tree)
-    return new Attacking(tree)
+    return new PickNextState(this)
   }
 
   private cleanup(tree: Unit) {

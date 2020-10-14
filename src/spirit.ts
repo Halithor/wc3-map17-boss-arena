@@ -24,8 +24,8 @@ const attackDamage = 125
 const attackMinFlightTime = 1.6
 
 let summonCount = 1
-const mobSummonChanceFactor = 7
-const mobsSummonWarmup = 150
+const mobSummonChanceFactor = 8
+const mobsSummonWarmup = 135
 const mobsSummonArea = 225
 
 const laserArea = 125
