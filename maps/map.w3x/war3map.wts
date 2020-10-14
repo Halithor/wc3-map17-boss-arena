@@ -690,9 +690,11 @@ STRING 149
 {
 You and a friend take on the roles of evil heroes part of the vanguard in the scourge's systematic destruction of the enchanted forest of Athen Lorel. The pestilence has finally reached the innermost glade; the source of the forest's magic. Our two cunning heroes decided to leave their allies behind and make haste to enter the glade, attempting to fight the Guardian of the Forest, and claim the magical power for themselves.
 
-Will the forest defeat our heroes and survive another day? Or will the Guardian succumb to their onslaught?
-
-|cffaaaaaaUse |r|cffffcc00-swap|r|cffaaaaaa to switch heroes at any time!|r
+|cffffcc00=== Tips ===|r
+|cffbbbbbbUse |r|cffffcc00-swap|r|cffbbbbbb to switch heroes at any time!|r
+|cffbbbbbbStrategically use |r|cffffcc00stuns to interrupt the boss.|r
+|cffbbbbbbMana and Health |r|cffffcc00runes|r|cffbbbbbb are critical to sustain during the fight.|r
+|cffbbbbbbYou have |cffffcc002 extra lives|r|cffbbbbbb (Ahnks) each. Game will rematch when both heroes are out of lives.|r
 }
 
 STRING 151
