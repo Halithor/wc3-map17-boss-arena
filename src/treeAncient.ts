@@ -135,15 +135,12 @@ class Attacking implements State {
     const rand = GetRandomReal(0, 1)
     if (
       Vec2.unitPos(this.target).distanceTo(Vec2.unitPos(tree)) <
-      earthquakeRadius
+        earthquakeRadius &&
+      rand < 0.5
     ) {
-      if (rand < 0.5) {
-        return new ChargeWarmup(tree)
-      } else {
-        return new EarthquakeWarmup(tree)
-      }
+      return new EarthquakeWarmup(tree)
     }
-    if (tree.life / tree.maxLife < 0.5 && rand < 0.33) {
+    if (tree.life / tree.maxLife < 0.5 && rand < 0.5) {
       return Strangleroots.afterSeeking(tree)
     }
     return new ChargeWarmup(tree)
@@ -440,14 +437,14 @@ class Strangleroots implements State {
       return new Attacking(tree)
     }
     // strangle every 1 second
-    if (this.duration % 100) {
+    if (this.duration % 100 == 0) {
       castTarget(
         tree.owner,
         AbilityIds.DummyStrangleroots,
         1,
         'entanglingroots',
         this.target,
-        Vec2.unitPos(this.target)
+        Vec2.unitPos(tree)
       )
     }
     if (this.duration != 0 && ModuloInteger(this.duration, 50) == 0) {

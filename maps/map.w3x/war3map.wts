@@ -755,12 +755,6 @@ STRING 164
  (dummy)
 }
 
-STRING 165
-// Abilities: A00R (Entangling Roots), Tip (Tooltip - Normal)
-{
-Strangelroots
-}
-
 STRING 166
 // Abilities: A00R (Entangling Roots), EditorSuffix (Editor Suffix)
 {

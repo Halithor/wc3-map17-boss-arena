@@ -36,12 +36,13 @@ export class Spirit {
   }
 
   start() {
-    const firstMove = new Move(getRectCenter(gg_rct_Boss_Spawn))
+    const firstMove = new Move(this.spirit, getRectCenter(gg_rct_Boss_Spawn))
     this.statemachine = new Statemachine(firstMove, this.spirit, 0.01)
   }
 
   cleanup() {
-    throw new Error('Method not implemented.')
+    this.spirit.kill()
+    this.statemachine.cleanup()
   }
 }
 
@@ -62,10 +63,8 @@ class PickNextState implements State {
   update(spirit: Unit): State {
     const rand = math.random()
     if (this.lastState instanceof Attacking && rand < 0.5) {
-      print('move')
-      return new Move()
+      return new Move(spirit)
     } else {
-      print('attacking')
       return new Attacking()
     }
   }
@@ -80,9 +79,6 @@ class Attacking implements State {
 
   update(entity: Unit): State {
     this.duration++
-    if (this.duration % 25 == 0) {
-      print('attacking ' + this.duration.toString())
-    }
     if (this.duration % attackInterval == 0) {
       const target = pickTargetHero(entity)
       const pos = Vec2.unitPos(target)
@@ -125,8 +121,8 @@ class Attacking implements State {
         }
       )
       ball.fx.scale = 1
-      // ball.fx.setColorByPlayer(PlayerAncients)
-      entity.setAnimation('attack')
+      ball.fx.setColorByPlayer(PlayerAncients)
+      entity.setAnimation('spell')
     }
     if (this.duration > attackDuration) {
       return new PickNextState(this)
@@ -144,11 +140,15 @@ class Move implements State {
   duration: number = 0
   effect1: Effect
   effect2: Effect
-  constructor(target?: Vec2) {
+  constructor(entity: Unit, target?: Vec2) {
     this.target = target
-    if (!this.target) {
+    while (!this.target) {
       const index = math.random(0, moveRects.length - 1)
       this.target = getRectCenter(moveRects[index])
+      // rejection sample to not pick the same spot
+      if (Vec2.unitPos(entity).distanceTo(this.target) < 100) {
+        this.target = null
+      }
     }
 
     this.effect1 = new Effect(
@@ -169,6 +169,7 @@ class Move implements State {
     }
     if (this.duration == 0) {
       entity.facing = angleHack(Vec2.unitPos(entity), this.target).degrees
+      entity.queueAnimation('stand,channel')
     }
     this.duration++
     if (this.duration > 250) {

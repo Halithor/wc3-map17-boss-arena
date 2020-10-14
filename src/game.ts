@@ -94,6 +94,22 @@ export class Game {
           this.spirit.start()
         })
       }
+      if (boss.typeId == UnitIds.WispAncient) {
+        this.spirit.cleanup()
+        print('Nooooooooo!')
+        print(
+          'You may have defeated me, but I will destroy my forest before I ever let you get your hands on her power!'
+        )
+        doAfter(5.0, () => {
+          print('|cffffcc00You have won! Thanks for playing!|r')
+          print('The game will restart in a few seconds...')
+          doAfter(10, () => {
+            print('One more time!')
+            this.cleanup()
+            this.start()
+          })
+        })
+      }
     })
   }
 
