@@ -52,7 +52,9 @@ export class CircleIndicator {
 
   public remove() {
     this.effects.forEach((effect) => {
-      effect.destroy()
+      if (effect != null) {
+        effect.destroy()
+      }
     })
   }
 }

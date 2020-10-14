@@ -11,6 +11,8 @@ export function forDestructablesInRect(
   })
 }
 
+// forDestructablesInCircle iterates over all destructables in a circle and 
+// calls the callback upon them.
 export function forDestructablesInCircle(
   pos: Vec2,
   radius: number,
@@ -49,4 +51,24 @@ export function killDestructablesInCircle(
       }
     }
   })
+}
+
+// getRandomDestructableInRange selects a random destructable in range that
+// matches the optionally provided filter.
+export function getRandomDestructableInRange(
+  pos: Vec2,
+  radius: number,
+  filter?: (d: Destructable) => boolean
+) {
+  let count = 0
+  let selected: Destructable = null
+  forDestructablesInCircle(pos, radius, (d: Destructable) => {
+    if (!filter || filter(d)) {
+      count++
+      if (GetRandomInt(1, count) == 1) {
+        selected = d
+      }
+    }
+  })
+  return selected
 }

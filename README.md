@@ -1,4 +1,4 @@
-# Halithor's Boss Arena
+# Desecration of the Forest
 
 A map made for the [Hiveworkshop Mini Mapping contest #17](https://www.hiveworkshop.com/threads/mini-mapping-contest-17-boss-fight-any-patch.324942/).
 
@@ -24,6 +24,12 @@ The Rules and Conditions:
 - Teamwork - physically working on someone else's entry - is not allowed.
   - Feedback isn't considered teamwork and is welcome.
 - Judges may not participate.
+
+## The Story
+
+You and a friend take on the roles of evil heroes part of the vanguard in the scourge's systematic destruction of the enchanted forest of Athen Lorel. The pestilence has finally reached the innermost glade; the source of the forest's magic. Our two cunning heroes decided to leave their allies behind and make haste to enter the glade, attempting to fight the Guardian of the Forest, and claim the magical power for themselves.
+
+Will the forest defeat our heroes and survive another day? Or will the Guardian succumb to their onslaught?
 
 ### Credit Due
 

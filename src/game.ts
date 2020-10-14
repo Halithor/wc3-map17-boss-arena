@@ -243,6 +243,14 @@ export class Game {
   }
 
   private cleanup() {
+    this.compVision.destroy()
+    this.p1Vision.destroy()
+    this.p2Vision.destroy()
+    this.gameOver.destroy()
+    this.runes.cleanup()
+    this.mobTimer.release()
+    this.bossDeath.destroy()
+
     this.scarab.destroy()
     this.demon.destroy()
 
@@ -252,12 +260,6 @@ export class Game {
     if (this.spirit) {
       this.spirit.cleanup()
     }
-    this.compVision.destroy()
-    this.p1Vision.destroy()
-    this.p2Vision.destroy()
-    this.gameOver.destroy()
-    this.runes.cleanup()
-    this.mobTimer.release()
 
     // General cleanup
     const playable = Rectangle.fromHandle(GetPlayableMapRect())

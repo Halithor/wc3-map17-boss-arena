@@ -18,20 +18,20 @@ import {castTarget} from 'lib/instantdummy'
 
 const updateDelta = 0.01
 
-const earthquakeWarmupDuration = 200
-const earthquakeRadius = 400
-const earthquakeDamage = 150
+const earthquakeWarmupDuration = 180
+const earthquakeRadius = 450
+const earthquakeDamage = 200
 const earthquakeEffect =
   'Abilities\\Spells\\Human\\Thunderclap\\ThunderClapCaster.mdl'
 
 const chargeWarumpDuration = 200
 const chargeDistance = 1800
-const chargeWidth = 300
-const chargeSpeed = 1400
-const chargeDamage = 125
+const chargeWidth = 330
+const chargeSpeed = 1600
+const chargeDamage = 200
 
 const strangleDuration = 800
-const strangleDamage = 800
+const strangleDamage = 1200
 
 export class TreeAncient {
   tree: Unit

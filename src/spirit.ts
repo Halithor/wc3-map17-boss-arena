@@ -1,11 +1,15 @@
-import {AbilityIds, PlayerAncients, UnitIds} from 'constants'
+import {AbilityIds, DestructableIds, PlayerAncients, UnitIds} from 'constants'
 import {CircleIndicator} from 'indicator'
 import {Angle} from 'lib/angle'
 import {damageEnemiesInArea} from 'lib/damage'
-import {killDestructablesInCircle} from 'lib/destructables'
+import {
+  getRandomDestructableInRange,
+  killDestructablesInCircle,
+} from 'lib/destructables'
 import {flashEffect} from 'lib/effect'
-import {getRandomUnitInRange} from 'lib/groups'
+import {forUnitsInRange, getRandomUnitInRange} from 'lib/groups'
 import {castImmediate} from 'lib/instantdummy'
+import {Lightning, LightningType} from 'lib/lightning'
 import {Projectile} from 'lib/projectile'
 import {getRectCenter, Vec2} from 'lib/vec2'
 import {State, Statemachine} from 'statemachine'
@@ -13,11 +17,23 @@ import {addScriptHook, Destructable, Effect, Unit, W3TS_HOOK} from 'w3ts/index'
 
 const updateDelta = 0.01
 
-const attackInterval = 150
+const attackInterval = 135
 const attackDuration = 900
 const attackAoE = 150
-const attackDamage = 110
-const attackMinFlightTime = 2.0
+const attackDamage = 125
+const attackMinFlightTime = 1.6
+
+let summonCount = 1
+const mobSummonChanceFactor = 7
+const mobsSummonWarmup = 150
+const mobsSummonArea = 225
+
+const laserArea = 125
+const laserDamage = 25
+const laserDuration = 800
+const laserDelay = 150
+const laserTrailDuration = 10
+const laserSpeed = 320
 
 let moveRects: rect[]
 
@@ -33,6 +49,7 @@ export class Spirit {
       pos.y,
       270
     )
+    summonCount = 1
   }
 
   start() {
@@ -62,11 +79,22 @@ class PickNextState implements State {
 
   update(spirit: Unit): State {
     const rand = math.random()
-    if (this.lastState instanceof Attacking && rand < 0.5) {
+    if (!(this.lastState instanceof Move) && math.random() < 0.4) {
+      print('move')
       return new Move(spirit)
-    } else {
-      return new Attacking()
     }
+    if (math.random() < mobSummonChanceFactor / summonCount) {
+      print('summon')
+      summonCount++
+      return new SummonMobs()
+    }
+    // Only after the summons have happend does the laser start replacing them
+    if (rand < 0.5 && spirit.life / spirit.maxLife < 0.6) {
+      print('laser')
+      return new Lasers(spirit)
+    }
+    print('attacking')
+    return new Attacking()
   }
 
   interrupt(entity: Unit): State {
@@ -194,6 +222,169 @@ class Move implements State {
   private cleanup() {
     this.effect1.destroy()
     this.effect2.destroy()
+  }
+}
+
+class SummonMobs implements State {
+  duration: number = 0
+  update(entity: Unit): State {
+    this.duration++
+    if (this.duration % 66 == 0) {
+      flashEffect(
+        'Objects\\Spawnmodels\\NightElf\\EntBirthTarget\\EntBirthTarget.mdl',
+        Vec2.unitPos(entity),
+        2.5
+      )
+    }
+    if (this.duration > mobsSummonWarmup) {
+      const target = getRandomDestructableInRange(
+        Vec2.unitPos(entity),
+        7000,
+        (d: Destructable) => {
+          return !DestructableIds.isPathingBlocker(d.typeId) && d.life > 0
+        }
+      )
+      if (target) {
+        const pos = Vec2.widgetPos(target)
+        killDestructablesInCircle(pos, mobsSummonArea, (d: Destructable) => {
+          if (d.typeId == DestructableIds.TreeId) {
+            const u = new Unit(
+              PlayerAncients,
+              UnitIds.TreantMob,
+              d.x,
+              d.y,
+              Angle.random().degrees
+            )
+            flashEffect(
+              'Objects\\Spawnmodels\\NightElf\\EntBirthTarget\\EntBirthTarget.mdl',
+              Vec2.widgetPos(d)
+            )
+          }
+          if (d.typeId == DestructableIds.RockId) {
+            const u = new Unit(
+              PlayerAncients,
+              UnitIds.RockGolemMob,
+              d.x,
+              d.y,
+              Angle.random().degrees
+            )
+            flashEffect(
+              'Abilities\\Spells\\Orc\\EarthQuake\\EarthQuakeTarget.mdl',
+              Vec2.widgetPos(d),
+              0.5
+            )
+          }
+        })
+      }
+      return new PickNextState(this)
+    }
+    return this
+  }
+  interrupt(entity: Unit): State {
+    return new PickNextState(this)
+  }
+}
+
+class LaserInfo {
+  constructor(
+    public target: Unit,
+    public pos: Vec2,
+    public lighting: Lightning,
+    public indicator: CircleIndicator
+  ) {}
+}
+
+class Lasers implements State {
+  duration: number = 0
+  lasers: LaserInfo[]
+
+  constructor(entity: Unit) {
+    this.lasers = []
+    const startPos = Vec2.unitPos(entity)
+    forUnitsInRange(startPos, 7000, (u: Unit) => {
+      if (u.isEnemy(entity.owner) && u.isHero()) {
+        const pos = Vec2.unitPos(u)
+        const indicator = new CircleIndicator(pos, laserArea, 8)
+        const laser = new Lightning(LightningType.DrainMana, startPos, pos)
+        this.lasers.push(new LaserInfo(u, pos, laser, indicator))
+      }
+    })
+  }
+
+  update(entity: Unit): State {
+    this.duration++
+    // Change effect to show that its active
+    if (this.duration == laserDelay) {
+      const startPos = Vec2.unitPos(entity)
+      for (let laser of this.lasers) {
+        laser.lighting.destroy()
+        laser.lighting = new Lightning(
+          LightningType.ChainLightningPrimary,
+          startPos,
+          laser.pos
+        )
+        laser.lighting
+      }
+    }
+    if (this.duration >= laserDelay) {
+      for (let laser of this.lasers) {
+        const nextPos = laser.pos.moveTowards(
+          Vec2.unitPos(laser.target),
+          laserSpeed * updateDelta
+        )
+        laser.pos = nextPos
+        if (this.duration % 2 == 0) {
+          // do this only every other update...
+          laser.indicator.pos = nextPos
+          laser.lighting.endPos = nextPos
+        }
+        // Deal damage every 1/4 second
+        if (this.duration % 25 == 0) {
+          damageEnemiesInArea(
+            entity,
+            laser.pos,
+            laserArea,
+            laserDamage,
+            true,
+            ATTACK_TYPE_MELEE,
+            DAMAGE_TYPE_NORMAL,
+            WEAPON_TYPE_WHOKNOWS
+          )
+          const ward = new Unit(
+            entity.owner,
+            UnitIds.LaserTrailWard,
+            laser.pos.x,
+            laser.pos.y,
+            0
+          )
+          ward.applyTimedLife(FourCC('BHwe'), laserTrailDuration)
+          killDestructablesInCircle(laser.pos, laserArea + 64)
+        }
+      }
+    }
+    if (this.duration > laserDuration) {
+      this.cleanup()
+      return new PickNextState(this)
+    }
+
+    return this
+  }
+
+  interrupt(entity: Unit): State {
+    this.cleanup()
+    return new PickNextState(this)
+  }
+
+  cleanup() {
+    this.lasers.forEach((laser) => {
+      // being very defensive because this errors sometimes?
+      if (laser) {
+        if (laser.indicator) {
+          laser.indicator.remove()
+        }
+        laser.lighting.destroy()
+      }
+    })
   }
 }
 

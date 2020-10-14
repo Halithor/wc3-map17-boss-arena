@@ -17,6 +17,7 @@ export class UnitIds {
   static readonly Dummy = FourCC('ndum')
 
   static readonly TrailOfFireWard = FourCC('o001')
+  static readonly LaserTrailWard = FourCC('o002')
 }
 
 export class DestructableIds {
@@ -25,9 +26,14 @@ export class DestructableIds {
 
   static readonly PathingBlockerSmall = FourCC('YTpb')
   static readonly PathingBlockerBig = FourCC('YTpc')
+  static readonly PathingBlockerTree = FourCC('B002')
 
   static isPathingBlocker(id: number): boolean {
-    return id == this.PathingBlockerSmall || id == this.PathingBlockerBig
+    return (
+      id == this.PathingBlockerSmall ||
+      id == this.PathingBlockerBig ||
+      id == this.PathingBlockerTree
+    )
   }
 }
 

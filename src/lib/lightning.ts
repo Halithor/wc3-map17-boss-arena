@@ -20,11 +20,36 @@ export enum LightningType {
 export class Lightning {
   private lightning: lightning
 
-  constructor(type: LightningType, start: Vec2, end: Vec2) {
-    this.lightning = AddLightning(type, true, start.x, start.y, end.x, end.y)
+  constructor(type: LightningType, private _start: Vec2, private _end: Vec2) {
+    this.lightning = AddLightning(
+      type,
+      true,
+      _start.x,
+      _start.y,
+      _end.x,
+      _end.y
+    )
   }
 
   destroy() {
-    DestroyLightning(this.lightning)
+    if (this.lightning != null) {
+      DestroyLightning(this.lightning)
+    }
+  }
+
+  public set endPos(pos: Vec2) {
+    this._end = pos
+    this.moveLighting()
+  }
+
+  private moveLighting() {
+    MoveLightning(
+      this.lightning,
+      true,
+      this._start.x,
+      this._start.y,
+      this._end.x,
+      this._end.y
+    )
   }
 }

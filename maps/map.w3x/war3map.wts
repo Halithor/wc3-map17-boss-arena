@@ -1,6 +1,6 @@
 ﻿STRING 1
 {
-Desecration of the Forest
+Desecration of the Forest v1.1
 }
 
 STRING 2
@@ -688,9 +688,9 @@ Heals 150 hit points to all nearby friendly non-mechanical units.
 
 STRING 149
 {
-The Scourage has been systematically destroying the enchanted Fangorn forest for the past year. Finally, the pestilence has reached the central grove, the source of magic, of the forest.
+You and a friend take on the roles of evil heroes part of the vanguard in the scourge's systematic destruction of the enchanted forest of Athen Lorel. The pestilence has finally reached the innermost glade; the source of the forest's magic. Our two cunning heroes decided to leave their allies behind and make haste to enter the glade, attempting to fight the Guardian of the Forest, and claim the magical power for themselves.
 
-Two heroes step into the grove, prepared to take on the Forest Guardian...
+Will the forest defeat our heroes and survive another day? Or will the Guardian succumb to their onslaught?
 
 |cffaaaaaaUse |r|cffffcc00-swap|r|cffaaaaaa to switch heroes at any time!|r
 }
@@ -759,5 +759,11 @@ STRING 166
 // Abilities: A00R (Entangling Roots), EditorSuffix (Editor Suffix)
 {
  (dummy)
+}
+
+STRING 167
+// Units: o002 (Laser Trail), Name (Name)
+{
+Laser Trail
 }
 
