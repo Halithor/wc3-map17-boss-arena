@@ -8,13 +8,15 @@ import {Vec2} from './vec2'
 const interval = 0.03
 
 export class Projectile {
-  private fx: Effect
+  fx: Effect
   private releaseTimer: (this: void) => void
   private _impactUnits = false
   private _impactDestructables = false
   private _destroyOnImpact = false
+  private originalDistance: number
   destFilter: () => (d: Destructable) => boolean
   unitFilter: () => (u: Unit) => boolean
+  vertSpeed: number
 
   constructor(
     private pos: Vec2,
@@ -31,6 +33,19 @@ export class Projectile {
     this.releaseTimer = function (this: void) {
       endPeriodic()
     }
+    let targetPos: Vec2
+    if (target instanceof Vec2) {
+      targetPos = target
+    } else {
+      targetPos = Vec2.unitPos(target)
+    }
+    this.originalDistance = pos.distanceTo(targetPos)
+    const flightTime = this.originalDistance / groundSpeed
+    const y0 = this.fx.z
+    const yEnd = targetPos.terrainZ
+    // motion equation to land on the height of the platform targeted.
+    this.vertSpeed =
+      (yEnd - y0) / flightTime + (flightTime * this.gravity) / 2.0
   }
 
   private tick() {
@@ -44,13 +59,12 @@ export class Projectile {
 
     const distance = this.pos.distanceTo(targetPos)
 
-    const flightTime = distance / this.groundSpeed
-    const heightDiff = targetZ - this.fx.z
-    const verticalSpeed =
-      heightDiff / flightTime - 0.5 * this.gravity * flightTime
+    // const flightTime = distance / this.groundSpeed
+    // const heightDiff = targetZ - this.fx.z
+    // const verticalSpeed = heightDiff / flightTime - 0.5 * this.arc * flightTime
+    this.vertSpeed = this.vertSpeed - this.gravity * interval
 
     if (this.groundSpeed * interval >= distance) {
-      this.fx.setPosition(targetPos.x, targetPos.y, targetZ)
       this.onImpact(this.target, targetPos)
       this.fx.destroy()
       this.releaseTimer()
@@ -59,10 +73,11 @@ export class Projectile {
         targetPos,
         this.groundSpeed * interval
       )
-      const nextZ = math.min(
-        this.fx.z + verticalSpeed * interval,
-        nextPos.terrainZ + 30
-      )
+      // const nextZ = math.max(
+      //   this.fx.z + this.vertSpeed * interval,
+      //   nextPos.terrainZ + 30
+      // )
+      const nextZ = this.fx.z + this.vertSpeed * interval
       this.fx.setPosition(nextPos.x, nextPos.y, nextZ)
       this.pos = nextPos
 

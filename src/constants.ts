@@ -9,7 +9,7 @@ export class UnitIds {
   static readonly FireDemon = FourCC('E002')
 
   static readonly TreantAncient = FourCC('e001')
-  static readonly WispAncient = FourCC('e002')
+  static readonly WispAncient = FourCC('e003')
 
   static readonly TreantMob = FourCC('n001')
   static readonly RockGolemMob = FourCC('n000')
@@ -50,4 +50,7 @@ export class AbilityIds {
 
   static readonly DummyFlamestrikeStun = FourCC('A00L')
   static readonly DummyHearthsEmbraceStun = FourCC('A00M')
+
+  static readonly DummyStrangleroots = FourCC('A00R')
+  static readonly DummyWispAttackStun = FourCC('A00Q')
 }

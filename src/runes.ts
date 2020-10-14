@@ -33,7 +33,6 @@ export class RuneSystem {
       const index = math.random(0, this.runeRects.length - 1)
       const rect = this.runeRects[index]
       const pos = new Vec2(GetRectCenterX(rect), GetRectCenterY(rect))
-      print('rune ' + index.toString() + '@' + pos.toString())
       let clear = true
       EnumItemsInRect(rect, null, () => {
         clear = false

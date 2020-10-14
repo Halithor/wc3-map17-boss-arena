@@ -4,7 +4,7 @@ import {Vec2} from './vec2'
 
 export function forDestructablesInRect(
   rect: Rectangle,
-  callback: (Destructable) => void
+  callback: (d: Destructable) => void
 ) {
   EnumDestructablesInRectAll(rect.handle, () => {
     callback(Destructable.fromHandle(GetEnumDestructable()))
@@ -39,7 +39,7 @@ export function forDestructablesInCircle(
 export function killDestructablesInCircle(
   pos: Vec2,
   radius: number,
-  callback?: (Destructable) => void
+  callback?: (d: Destructable) => void
 ) {
   forDestructablesInCircle(pos, radius, (d: Destructable) => {
     if (d.life > 1 && !DestructableIds.isPathingBlocker(d.typeId)) {

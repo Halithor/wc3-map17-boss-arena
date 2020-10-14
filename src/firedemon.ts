@@ -63,7 +63,7 @@ function firewave(demon: Unit, target: Vec2) {
       Vec2.unitPos(demon).moveTowards(target, 32),
       target,
       1000,
-      0,
+      100,
       'Abilities\\Weapons\\RedDragonBreath\\RedDragonMissile.mdl',
       (_target: Unit | Vec2 | Destructable, pos: Vec2) => {
         killDestructablesInCircle(pos, 164)
@@ -90,10 +90,7 @@ function firewave(demon: Unit, target: Vec2) {
     ball.destroyOnImpact(true)
   }
   const demonPos = Vec2.unitPos(demon)
-  const targetFixed = demonPos.moveTowards(
-    target,
-    math.max(500, demonPos.distanceTo(target))
-  )
+  const targetFixed = demonPos.moveTowards(target, 1200)
   const normal = demonPos.normalizedPointerTo(targetFixed)
   makeBall(targetFixed.add(normal.rotate(Angle.fromDegrees(-90)).scale(500)))
   makeBall(targetFixed.add(normal.rotate(Angle.fromDegrees(-90)).scale(166)))

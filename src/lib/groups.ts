@@ -1,5 +1,5 @@
 import {Vec2} from './vec2'
-import {Unit, Group} from 'w3ts/index'
+import {Unit, Group, Rectangle} from 'w3ts/index'
 
 const maxCollisionSize = 200.0
 
@@ -65,7 +65,11 @@ export function getRandomUnitInRange(
 }
 
 // Executes a callback on the nearest unit
-export function findNearestUnit(pos: Vec2, range: number, filter: filterfunc) {
+export function findNearestUnit(
+  pos: Vec2,
+  range: number,
+  filter: filterfunc
+): Unit {
   const enumGroup = new Group()
   enumGroup.enumUnitsInRange(pos.x, pos.y, range, filter)
   let nearest: Unit = null
@@ -80,4 +84,12 @@ export function findNearestUnit(pos: Vec2, range: number, filter: filterfunc) {
   })
   enumGroup.destroy()
   return nearest
+}
+
+export function forUnitsInRect(rct: Rectangle, callback: (u: Unit) => void) {
+  const enumGroup = new Group()
+  enumGroup.enumUnitsInRect(rct, null)
+  enumGroup.for(() => {
+    callback(Unit.fromHandle(GetEnumUnit()))
+  })
 }

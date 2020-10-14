@@ -1,4 +1,4 @@
-import {Timer, Unit} from 'w3ts'
+import {Timer, Trigger, Unit} from 'w3ts'
 import {Players} from 'w3ts/globals'
 import {addScriptHook, W3TS_HOOK} from 'w3ts/hooks'
 import {Game} from 'game'
@@ -14,11 +14,12 @@ function tsMain() {
   initScarab()
   initDemon()
 
-  const game = new Game()
+  let game = new Game()
 
   new Timer().start(1.0, false, () => {
     game.start()
   })
+
 }
 
 addScriptHook(W3TS_HOOK.MAIN_AFTER, tsMain)

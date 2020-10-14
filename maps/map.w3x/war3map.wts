@@ -1,6 +1,6 @@
 ﻿STRING 1
 {
-End of the Ancients
+Desecration of the Forest
 }
 
 STRING 2
@@ -20,12 +20,12 @@ Halithor
 
 STRING 5
 {
-Halithor's
+Halithor presents
 }
 
 STRING 6
 {
-Culling of Forest
+Desecration of the Forest
 }
 
 STRING 7
@@ -96,24 +96,6 @@ STRING 18
 // Units: U000 (Scarab King), Revivetip (Tooltip - Revive)
 {
 Scarab King
-}
-
-STRING 19
-// Units: e001 (Ancient Keeper), Ubertip (Tooltip - Extended)
-{
-Ancient Keepr
-}
-
-STRING 20
-// Units: e001 (Ancient Keeper), Tip (Tooltip - Basic)
-{
-Ancient Keepr
-}
-
-STRING 22
-// Units: e001 (Ancient Keeper), Name (Name)
-{
-Ancient Keeper
 }
 
 STRING 23
@@ -596,12 +578,6 @@ STRING 126
 Poison Strike
 }
 
-STRING 127
-// Abilities: A00J (Poison Strike), Ubertip (Tooltip - Normal - Extended)
-{
-Strike the enemy with a poisoned attack, dealing 75 damage and 20 damage every second for 6 seconds. The poison slows the attack and movement rate of the target slightly.
-}
-
 STRING 129
 // Buffs/Effects: B006 (), Buffubertip (Tooltip - Extended)
 {
@@ -708,5 +684,86 @@ STRING 148
 // Items: I001 (Rune of Healing), Ubertip (Tooltip - Extended)
 {
 Heals 150 hit points to all nearby friendly non-mechanical units.
+}
+
+STRING 149
+{
+The Scourage has been systematically destroying the enchanted Fangorn forest for the past year. Finally, the pestilence has reached the central grove, the source of magic, of the forest.
+
+Two heroes step into the grove, prepared to take on the Forest Guardian...
+
+|cffaaaaaaUse |r|cffffcc00-swap|r|cffaaaaaa to switch heroes at any time!|r
+}
+
+STRING 151
+// Units: e003 (Spirit Guardian), Name (Name)
+{
+Spirit Guardian
+}
+
+STRING 154
+// Units: e001 (Ancient Guardian), Name (Name)
+{
+Ancient Guardian
+}
+
+STRING 155
+// Units: e001 (Ancient Guardian), Ubertip (Tooltip - Extended)
+{
+Ancient Guardian
+}
+
+STRING 156
+// Units: e001 (Ancient Guardian), Tip (Tooltip - Basic)
+{
+Ancient Guardian
+}
+
+STRING 157
+// Units: e003 (Spirit Guardian), Ubertip (Tooltip - Extended)
+{
+Spirit Guardian
+}
+
+STRING 158
+// Units: e003 (Spirit Guardian), Tip (Tooltip - Basic)
+{
+Spirit Guardian
+}
+
+STRING 161
+// Abilities: A00J (Poison Strike), Ubertip (Tooltip - Normal - Extended)
+{
+Strike the enemy with a poisoned attack, dealing 75 damage and 15 damage every second for 6 seconds. The poison slows the attack, spell channel, and movement rate of the target slightly.|n|n|cffaaaaaaLasts 6 seconds, 12 second cooldown. 15% reduction to spell cast speed, attack speed, and move speed.
+}
+
+STRING 162
+// Abilities: A00Q (Wisp Attack - Stunner), Tip (Tooltip - Normal)
+{
+Wisp Attack - Stunner
+}
+
+STRING 163
+// Abilities: A00Q (Wisp Attack - Stunner), Name (Name)
+{
+Wisp Attack - Stunner
+}
+
+STRING 164
+// Abilities: A00Q (Wisp Attack - Stunner), EditorSuffix (Editor Suffix)
+{
+ (dummy)
+}
+
+STRING 165
+// Abilities: A00R (Entangling Roots), Tip (Tooltip - Normal)
+{
+Strangelroots
+}
+
+STRING 166
+// Abilities: A00R (Entangling Roots), EditorSuffix (Editor Suffix)
+{
+ (dummy)
 }
 

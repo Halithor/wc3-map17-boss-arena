@@ -13,6 +13,7 @@ import {
   PlayerOne,
   PlayerTwo,
   DestructableIds,
+  AbilityIds,
 } from 'constants'
 import {CircleIndicator, LineIndicator} from 'indicator'
 import {Vec2} from 'lib/vec2'
@@ -30,6 +31,7 @@ import {isTerrainWalkable} from 'lib/terrain'
 import {Lightning, LightningType} from 'lib/lightning'
 import {doAfter, Timer} from 'lib/timer'
 import {pauseCameraSystem} from 'lib/camera'
+import {castTarget} from 'lib/instantdummy'
 
 const updateDelta = 0.01
 
@@ -49,11 +51,8 @@ const strangleDuration = 800
 const strangleDamage = 800
 
 export class TreeAncient {
-  private readonly tree: Unit
-
+  tree: Unit
   private statemachine: Statemachine
-
-  private addTimer: Timer
 
   constructor() {
     this.tree = new Unit(
@@ -64,28 +63,6 @@ export class TreeAncient {
       270
     )
     this.tree.issueImmediateOrder('unroot')
-
-    const g = new Group()
-    this.addTimer = Timer.get()
-    this.addTimer.startPeriodic(5, () => {
-      g.enumUnitsOfPlayer(
-        PlayerAncients,
-        Filter(() => {
-          return !this.tree.isUnit(Unit.fromHandle(GetFilterUnit()))
-        })
-      )
-      g.for(() => {
-        const u = Unit.fromHandle(GetEnumUnit())
-        const target = getNearestUnit(
-          Vec2.unitPos(u),
-          2500,
-          Filter(() => {
-            return Unit.fromHandle(GetFilterUnit()).isEnemy(PlayerAncients)
-          })
-        )
-        u.issueOrderAt('attack', target.x, target.y)
-      })
-    })
   }
 
   start() {
@@ -118,16 +95,15 @@ export class TreeAncient {
   }
 
   cleanup() {
-    this.tree.destroy()
+    this.tree.kill()
     this.statemachine.cleanup()
-    this.addTimer.release()
   }
 }
 
 function pickTargetHero(tree: Unit): Unit {
   return getRandomUnitInRange(
     Vec2.unitPos(tree),
-    5000,
+    9000,
     (u: Unit) => {
       return u.isEnemy(PlayerAncients) && u.isHero() && u.isAlive()
     },
@@ -149,12 +125,8 @@ class Attacking implements State {
         tree.issueTargetOrder('attack', this.target)
       }
     }
-    if (this.duration > 800) {
-      // this.trg.destroy()
+    if (this.duration > 700) {
       return this.pickNextState(tree)
-    }
-    if (ModuloInteger(this.duration, 100) == 0) {
-      print('attacking(' + this.duration.toString() + '): ' + this.target.name)
     }
     return this
   }
@@ -225,9 +197,6 @@ class EarthquakeWarmup implements State {
       return new Earthquake(this.indicator)
     }
 
-    if (ModuloInteger(this.duration, 25) == 0) {
-      print('eqcharge(' + this.duration.toString() + ')')
-    }
     return this
   }
 
@@ -258,7 +227,6 @@ class Earthquake implements State {
     // undo the start of earthquake
     tree.paused = false
     this.indicator.remove()
-    print('earthquake!')
     return new Attacking(tree)
   }
 
@@ -296,7 +264,6 @@ class ChargeWarmup implements State {
     const ang = Angle.fromRadians(Atan2(pointer.y, pointer.x))
     tree.facing = ang.degrees
     this.duration = 0
-    print('charge Warmup')
   }
 
   update(entity: Unit): State {
@@ -307,9 +274,6 @@ class ChargeWarmup implements State {
     this.indicator.width = indicatorWidth
     if (this.duration > chargeWarumpDuration) {
       return new Charge(entity, this.startPos, this.targetPos, this.indicator)
-    }
-    if (ModuloInteger(this.duration, 25) == 0) {
-      print('chargewarmup(' + this.duration.toString() + ')')
     }
     return this
   }
@@ -452,7 +416,6 @@ class Seek implements State {
       return this.interrupt(entity)
     }
     if (ModuloInteger(this.duration, 50) == 0) {
-      print('seeking')
       entity.issueOrderAt('move', pos.x, pos.y)
     }
 
@@ -480,7 +443,6 @@ class Strangleroots implements State {
     this.duration++
     if (!this.initialized) {
       this.initialized = true
-      this.target.paused = true
       tree.paused = true
       this.target.addAbility(FourCC('A007'))
       this.lightning = new Lightning(
@@ -494,8 +456,18 @@ class Strangleroots implements State {
       this.cleanup(tree)
       return new Attacking(tree)
     }
+    // strangle every 1 second
+    if (this.duration % 100) {
+      castTarget(
+        tree.owner,
+        AbilityIds.DummyStrangleroots,
+        1,
+        'entanglingroots',
+        this.target,
+        Vec2.unitPos(this.target)
+      )
+    }
     if (this.duration != 0 && ModuloInteger(this.duration, 50) == 0) {
-      print('strangleroots(' + this.duration.toString() + ')')
       const dmg = 50 * (strangleDamage / strangleDuration)
       tree.damageTarget(
         this.target.handle,
@@ -521,7 +493,6 @@ class Strangleroots implements State {
   }
 
   private cleanup(tree: Unit) {
-    this.target.paused = false
     tree.paused = false
     this.target.removeAbility(FourCC('A007'))
     this.lightning.destroy()

@@ -103,7 +103,7 @@ function InitCustomPlayerSlots()
     SetPlayerStartLocation(Player(10), 2)
     ForcePlayerStartLocation(Player(10), 2)
     SetPlayerColor(Player(10), ConvertPlayerColor(10))
-    SetPlayerRacePreference(Player(10), RACE_PREF_UNDEAD)
+    SetPlayerRacePreference(Player(10), RACE_PREF_NIGHTELF)
     SetPlayerRaceSelectable(Player(10), false)
     SetPlayerController(Player(10), MAP_CONTROL_COMPUTER)
 end

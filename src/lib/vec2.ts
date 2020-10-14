@@ -135,3 +135,7 @@ export function getRandomPosInRect(rect: rect): Vec2 {
     GetRandomInt(GetRectMinY(rect), GetRectMaxY(rect))
   )
 }
+
+export function getRectCenter(rect: rect): Vec2 {
+  return new Vec2(GetRectCenterX(rect), GetRectCenterY(rect))
+}
