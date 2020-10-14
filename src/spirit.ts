@@ -85,7 +85,7 @@ class PickNextState implements State {
   update(spirit: Unit): State {
     // Make the spirit go summon crazy again at low life.
     if (spirit.life / spirit.maxLife < 0.4 && !summonResetUsed) {
-      summonCount = 1
+      summonCount = mobSummonChanceFactor + 1
       summonResetUsed = true
     }
 
