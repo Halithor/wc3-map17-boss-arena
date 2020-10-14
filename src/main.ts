@@ -1,8 +1,7 @@
-import {Timer, Trigger, Unit} from 'w3ts'
-import {Players} from 'w3ts/globals'
+import {Timer} from 'w3ts'
 import {addScriptHook, W3TS_HOOK} from 'w3ts/hooks'
 import {Game} from 'game'
-import {CameraSystem} from 'lib/camera'
+import {initCamSystem} from 'lib/camera'
 import {initScarab} from 'scarabking'
 import {initDemon} from 'firedemon'
 
@@ -13,13 +12,13 @@ const TSTL_VERSION = compiletime(() => require('typescript-to-lua').version)
 function tsMain() {
   initScarab()
   initDemon()
+  initCamSystem()
 
   let game = new Game()
 
   new Timer().start(1.0, false, () => {
     game.start()
   })
-
 }
 
 addScriptHook(W3TS_HOOK.MAIN_AFTER, tsMain)

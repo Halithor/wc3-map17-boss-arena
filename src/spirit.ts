@@ -1,5 +1,6 @@
 import {AbilityIds, PlayerAncients, UnitIds} from 'constants'
 import {CircleIndicator} from 'indicator'
+import {Angle} from 'lib/angle'
 import {damageEnemiesInArea} from 'lib/damage'
 import {killDestructablesInCircle} from 'lib/destructables'
 import {flashEffect} from 'lib/effect'
@@ -16,6 +17,7 @@ const attackInterval = 150
 const attackDuration = 900
 const attackAoE = 150
 const attackDamage = 110
+const attackMinFlightTime = 2.0
 
 let moveRects: rect[]
 
@@ -84,15 +86,21 @@ class Attacking implements State {
     if (this.duration % attackInterval == 0) {
       const target = pickTargetHero(entity)
       const pos = Vec2.unitPos(target)
+      const origin = Vec2.unitPos(entity)
+      const angleTo = angleHack(origin, pos)
+      entity.facing = angleTo.degrees
 
       const indicator = new CircleIndicator(pos, attackAoE, 16)
 
+      const distance = origin.distanceTo(pos)
+      const groundSpeed = math.min(700, distance / attackMinFlightTime)
       const ball = new Projectile(
-        Vec2.unitPos(entity),
+        origin.moveTowards(pos, 50),
         pos,
-        800,
-        10,
-        'Abilities\\Weapons\\WitchDoctorMissile\\WitchDoctorMissile.mdl',
+        groundSpeed,
+        1400,
+        // 'Abilities\\Weapons\\WitchDoctorMissile\\WitchDoctorMissile.mdl',
+        'units\\nightelf\\Wisp\\Wisp.mdl',
         (_target: Unit | Vec2 | Destructable, pos: Vec2) => {
           killDestructablesInCircle(pos, attackAoE + 64)
           damageEnemiesInArea(
@@ -116,8 +124,9 @@ class Attacking implements State {
           flashEffect('Units\\NightElf\\Wisp\\WispExplode.mdl', pos, 0.5)
         }
       )
-      ball.fx.scale = 2
-      entity.setAnimation('stand,work')
+      ball.fx.scale = 1
+      // ball.fx.setColorByPlayer(PlayerAncients)
+      entity.setAnimation('attack')
     }
     if (this.duration > attackDuration) {
       return new PickNextState(this)
@@ -158,6 +167,9 @@ class Move implements State {
       )
       this.effect2.scale = 2
     }
+    if (this.duration == 0) {
+      entity.facing = angleHack(Vec2.unitPos(entity), this.target).degrees
+    }
     this.duration++
     if (this.duration > 250) {
       flashEffect(
@@ -182,6 +194,12 @@ class Move implements State {
     this.effect1.destroy()
     this.effect2.destroy()
   }
+}
+
+// TODO remove when Vec package fixed
+function angleHack(a: Vec2, b: Vec2): Angle {
+  const dir = a.normalizedPointerTo(b)
+  return Angle.fromRadians(Atan2(dir.y, dir.x))
 }
 
 function init() {

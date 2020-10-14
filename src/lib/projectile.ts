@@ -73,11 +73,10 @@ export class Projectile {
         targetPos,
         this.groundSpeed * interval
       )
-      // const nextZ = math.max(
-      //   this.fx.z + this.vertSpeed * interval,
-      //   nextPos.terrainZ + 30
-      // )
-      const nextZ = this.fx.z + this.vertSpeed * interval
+      const nextZ = math.max(
+        this.fx.z + this.vertSpeed * interval,
+        nextPos.terrainZ + 30
+      )
       this.fx.setPosition(nextPos.x, nextPos.y, nextZ)
       this.pos = nextPos
 

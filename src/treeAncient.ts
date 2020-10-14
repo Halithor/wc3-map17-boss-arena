@@ -1,25 +1,9 @@
-import {
-  Unit,
-  Effect,
-  Group,
-  Trigger,
-  Destructable,
-  Widget,
-  Camera,
-} from 'w3ts/index'
-import {
-  PlayerAncients,
-  UnitIds,
-  PlayerOne,
-  PlayerTwo,
-  DestructableIds,
-  AbilityIds,
-} from 'constants'
+import {Unit, Group, Trigger, Destructable, Widget} from 'w3ts/index'
+import {PlayerAncients, UnitIds, DestructableIds, AbilityIds} from 'constants'
 import {CircleIndicator, LineIndicator} from 'indicator'
 import {Vec2} from 'lib/vec2'
 import {damageEnemiesInArea} from 'lib/damage'
 import {flashEffect} from 'lib/effect'
-import {Players} from 'w3ts/globals/index'
 import {Statemachine, State} from 'statemachine'
 import {
   findNearestUnit as getNearestUnit,
@@ -29,8 +13,7 @@ import {forDestructablesInCircle} from 'lib/destructables'
 import {Angle} from 'lib/angle'
 import {isTerrainWalkable} from 'lib/terrain'
 import {Lightning, LightningType} from 'lib/lightning'
-import {doAfter, Timer} from 'lib/timer'
-import {pauseCameraSystem} from 'lib/camera'
+import {doAfter} from 'lib/timer'
 import {castTarget} from 'lib/instantdummy'
 
 const updateDelta = 0.01
@@ -67,7 +50,7 @@ export class TreeAncient {
 
   start() {
     const setup = GetCurrentCameraSetup()
-    pauseCameraSystem(true)
+    // pauseCameraSystem(true)
     CinematicModeBJ(true, bj_FORCE_ALL_PLAYERS)
     CameraSetupApply(gg_cam_Boss_Camera, true, false)
     TransmissionFromUnitWithNameBJ(
@@ -83,7 +66,7 @@ export class TreeAncient {
 
     doAfter(6.0, () => {
       CinematicModeBJ(false, bj_FORCE_ALL_PLAYERS)
-      pauseCameraSystem(false)
+      // pauseCameraSystem(false)
       CameraSetupApply(setup, true, false)
 
       this.statemachine = new Statemachine(

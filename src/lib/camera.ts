@@ -101,8 +101,7 @@ export function pauseCameraSystem(paused: boolean) {
   }
 }
 
-function init() {
+export function initCamSystem() {
   system = new CameraSystem()
 }
 
-addScriptHook(W3TS_HOOK.MAIN_AFTER, init)
