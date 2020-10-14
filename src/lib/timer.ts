@@ -1,3 +1,5 @@
+/** @noSelfInFile **/
+
 import {Handle} from 'w3ts/index'
 
 const freeTimers: Timer[] = []

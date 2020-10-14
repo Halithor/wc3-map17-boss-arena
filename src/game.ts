@@ -2,13 +2,18 @@ import {Unit, Trigger, Region, Rectangle, FogModifier} from 'w3ts/index'
 import {UnitIds, PlayerAncients, PlayerOne, PlayerTwo, ItemIds} from 'constants'
 import {Players} from 'w3ts/globals/index'
 import {TreeAncient} from 'treeAncient'
+import { RuneSystem } from 'runes'
 
 const playerVisionRadius = 5100
 
 export class Game {
   readonly startEncounter: Trigger
+  private compVision: FogModifier
+  private p1Vision: FogModifier
+  private p2Vision: FogModifier
 
   treeAncient: TreeAncient
+  runes: RuneSystem
 
   constructor() {
     this.startEncounter = new Trigger()
@@ -26,6 +31,8 @@ export class Game {
 
     this.spawnPlayers()
     this.setupOnePlayerSettings()
+
+    this.runes = new RuneSystem()
   }
 
   private spawnPlayers() {
@@ -54,7 +61,7 @@ export class Game {
   }
 
   private createVision() {
-    const compVision = new FogModifier(
+    this.compVision = new FogModifier(
       PlayerAncients,
       FOG_OF_WAR_VISIBLE,
       0,
@@ -63,8 +70,8 @@ export class Game {
       true,
       true
     )
-    compVision.start()
-    const p1Vision = new FogModifier(
+    this.compVision.start()
+    this.p1Vision = new FogModifier(
       PlayerOne,
       FOG_OF_WAR_VISIBLE,
       0,
@@ -73,8 +80,8 @@ export class Game {
       true,
       true
     )
-    p1Vision.start()
-    const p2Vision = new FogModifier(
+    this.p1Vision.start()
+    this.p2Vision = new FogModifier(
       PlayerTwo,
       FOG_OF_WAR_VISIBLE,
       0,
@@ -83,7 +90,7 @@ export class Game {
       true,
       true
     )
-    p2Vision.start()
+    this.p2Vision.start()
   }
 
   // Debug function for one player play
@@ -105,7 +112,15 @@ export class Game {
     this.treeAncient.start()
     this.startEncounter.destroy()
     this.createVision()
+    this.runes.start()
   }
 
-  private restart() {}
+  private cleanup() {
+    this.startEncounter.destroy()
+    this.treeAncient.cleanup()
+    this.compVision.destroy()
+    this.p1Vision.destroy()
+    this.p2Vision.destroy()
+    this.runes.start()
+  }
 }

@@ -584,20 +584,14 @@ STRING 123
 Increase the Scarab King's armor dramatically for 3 seconds.|n|n|cffaaaaaaLasts 3 seconds, 10 second cooldown. All boss damage is reduced by armor.
 }
 
-STRING 124
-// Abilities: A00J (Poison Strike), Hotkey (Hotkey - Normal)
-{
-E
-}
-
 STRING 125
-// Abilities: A00J (Poison Strike), Tip (Tooltip - Normal)
+// Abilities: A00J (Poison Strike), Name (Name)
 {
 Poison Strike
 }
 
 STRING 126
-// Abilities: A00J (Poison Strike), Name (Name)
+// Buffs/Effects: B006 (), Bufftip (Tooltip)
 {
 Poison Strike
 }
@@ -606,12 +600,6 @@ STRING 127
 // Abilities: A00J (Poison Strike), Ubertip (Tooltip - Normal - Extended)
 {
 Strike the enemy with a poisoned attack, dealing 75 damage and 20 damage every second for 6 seconds. The poison slows the attack and movement rate of the target slightly.
-}
-
-STRING 128
-// Buffs/Effects: B006 (), Bufftip (Tooltip)
-{
-Poison Strike
 }
 
 STRING 129
@@ -642,5 +630,83 @@ STRING 135
 // Abilities: A00K (Trail of Fire Aura), Tip (Tooltip - Normal)
 {
 Trail of Fire Aura
+}
+
+STRING 136
+// Abilities: A00L (Flamestrike - Stunner), Tip (Tooltip - Normal)
+{
+Flamestrike - Stunner
+}
+
+STRING 137
+// Abilities: A00L (Flamestrike - Stunner), Name (Name)
+{
+Flamestrike - Stunner
+}
+
+STRING 138
+// Abilities: A00L (Flamestrike - Stunner), EditorSuffix (Editor Suffix)
+{
+ (dummy)
+}
+
+STRING 139
+// Abilities: A00M (Hearths Embrace - Stun), Name (Name)
+{
+Hearths Embrace - Stun
+}
+
+STRING 140
+// Abilities: A00M (Hearths Embrace - Stun), Tip (Tooltip - Normal)
+{
+Hearths Embrace - Stun
+}
+
+STRING 141
+// Abilities: A00J (Poison Strike), Hotkey (Hotkey - Normal)
+{
+W
+}
+
+STRING 142
+// Abilities: A00J (Poison Strike), Tip (Tooltip - Normal)
+{
+Poison Strike [|cffffcc00W|r]
+}
+
+STRING 143
+// Abilities: A00N (Heal Rune), Name (Name)
+{
+Heal Rune
+}
+
+STRING 144
+// Abilities: A00O (Mana Rune), Name (Name)
+{
+Mana Rune
+}
+
+STRING 145
+// Abilities: A00P (Resto Rue), Name (Name)
+{
+Resto Rue
+}
+
+STRING 146
+// Items: I003 (Rune of Restoration), Ubertip (Tooltip - Extended)
+{
+Restores 150 life and 100 mana to nearby allies.
+}
+
+STRING 147
+// Items: I002 (Rune of Mana), Ubertip (Tooltip - Extended)
+{
+Restores 100 mana to all nearby friendly units.
+}
+
+STRING 148
+// Items: I001 (Rune of Healing), Ubertip (Tooltip - Extended)
+{
+Heals 150 hit points to all nearby friendly non-mechanical units.
 }
 

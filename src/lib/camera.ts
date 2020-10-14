@@ -1,6 +1,9 @@
-import {MapPlayer, Trigger, Timer} from 'w3ts/index'
+import {MapPlayer, Trigger, Timer, addScriptHook, W3TS_HOOK} from 'w3ts/index'
 import {Players} from 'w3ts/globals/index'
 import {PlayerOne, PlayerTwo} from 'constants'
+
+// The global running system
+let system: CameraSystem
 
 // Divide by 100 to account for the percentage aspect of our system
 const camDistanceBase: number = 1650 / 100.0
@@ -80,4 +83,26 @@ export class CameraSystem {
       )
     }
   }
+
+  pause() {
+    this.timer.pause()
+  }
+
+  resume() {
+    this.timer.resume()
+  }
 }
+
+export function pauseCameraSystem(paused: boolean) {
+  if (paused) {
+    system.pause()
+  } else {
+    system.resume()
+  }
+}
+
+function init() {
+  system = new CameraSystem()
+}
+
+addScriptHook(W3TS_HOOK.MAIN_AFTER, init)

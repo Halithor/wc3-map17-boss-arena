@@ -120,6 +120,10 @@ export class Vec2 {
   public inRange(other: Vec2, radius: number): boolean {
     return this.distanceToSq(other) < radius * radius
   }
+
+  public toString() {
+    return '(' + this.x.toString() + ', ' + this.y.toString() + ')'
+  }
 }
 
 // Make a new position.

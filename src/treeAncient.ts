@@ -1,11 +1,11 @@
 import {
   Unit,
-  Timer,
   Effect,
   Group,
   Trigger,
   Destructable,
   Widget,
+  Camera,
 } from 'w3ts/index'
 import {
   PlayerAncients,
@@ -28,6 +28,8 @@ import {forDestructablesInCircle} from 'lib/destructables'
 import {Angle} from 'lib/angle'
 import {isTerrainWalkable} from 'lib/terrain'
 import {Lightning, LightningType} from 'lib/lightning'
+import {doAfter, Timer} from 'lib/timer'
+import {pauseCameraSystem} from 'lib/camera'
 
 const updateDelta = 0.01
 
@@ -64,8 +66,8 @@ export class TreeAncient {
     this.tree.issueImmediateOrder('unroot')
 
     const g = new Group()
-    this.addTimer = new Timer()
-    this.addTimer.start(5, true, () => {
+    this.addTimer = Timer.get()
+    this.addTimer.startPeriodic(5, () => {
       g.enumUnitsOfPlayer(
         PlayerAncients,
         Filter(() => {
@@ -87,12 +89,38 @@ export class TreeAncient {
   }
 
   start() {
-    print('WHO DISTURBS MY FOREST')
-    this.statemachine = new Statemachine(
-      new Attacking(this.tree),
-      this.tree,
-      updateDelta
+    const setup = GetCurrentCameraSetup()
+    pauseCameraSystem(true)
+    CinematicModeBJ(true, bj_FORCE_ALL_PLAYERS)
+    CameraSetupApply(gg_cam_Boss_Camera, true, false)
+    TransmissionFromUnitWithNameBJ(
+      bj_FORCE_ALL_PLAYERS,
+      this.tree.handle,
+      'Forest Guardian',
+      null,
+      'Your destructive rampage through my forest ends here!',
+      1,
+      6,
+      false
     )
+
+    doAfter(6.0, () => {
+      CinematicModeBJ(false, bj_FORCE_ALL_PLAYERS)
+      pauseCameraSystem(false)
+      CameraSetupApply(setup, true, false)
+
+      this.statemachine = new Statemachine(
+        new Attacking(this.tree),
+        this.tree,
+        updateDelta
+      )
+    })
+  }
+
+  cleanup() {
+    this.tree.destroy()
+    this.statemachine.cleanup()
+    this.addTimer.release()
   }
 }
 
@@ -148,7 +176,6 @@ class Attacking implements State {
   }
 
   private pickNextState(tree: Unit): State {
-
     this.pickNewTarget(tree)
     const rand = GetRandomReal(0, 1)
     if (

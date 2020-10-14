@@ -1,6 +1,9 @@
 import {AbilityIds, DestructableIds, UnitIds} from 'constants'
 import {Angle} from 'lib/angle'
-import {forDestructablesInCircle} from 'lib/destructables'
+import {
+  forDestructablesInCircle,
+  killDestructablesInCircle,
+} from 'lib/destructables'
 import {flashEffect} from 'lib/effect'
 import {isTerrainWalkable} from 'lib/terrain'
 import {doPeriodicallyCounted, Timer} from 'lib/timer'
@@ -23,7 +26,6 @@ function handleScarabCast() {
 const speed = 1400
 const updateDelta = 0.02
 function carrionCharge(scarab: Unit, target: Vec2) {
-  print('debug: carrion charge')
   const dir = Vec2.unitPos(scarab).normalizedPointerTo(target)
   const ang = Angle.fromRadians(Atan2(dir.y, dir.x))
   scarab.facing = ang.degrees
@@ -59,13 +61,7 @@ function carrionCharge(scarab: Unit, target: Vec2) {
     (cancel, index: number) => {
       const nextPos = Vec2.unitPos(scarab).add(dir.scale(updateDelta * speed))
       if (index % 2 == 0) {
-        forDestructablesInCircle(nextPos, 120, (d: Destructable) => {
-          if (d.life > 1) {
-            if (!DestructableIds.isPathingBlocker(d.typeId)) {
-              d.kill()
-            }
-          }
-        })
+        killDestructablesInCircle(nextPos, 120)
       }
       if (index % 5 == 0) {
         flashEffect(
@@ -84,39 +80,6 @@ function carrionCharge(scarab: Unit, target: Vec2) {
       scarab.paused = false
     }
   )
-  // const timer = Timer.get()
-  // timer.startPeriodic(updateDelta, () => {
-  //   intervals--
-  //   if (intervals < 0) {
-  //     timer.release()
-  //     trg.destroy()
-  //     scarab.paused = false
-  //     return
-  //   }
-  //   const nextPos = Vec2.unitPos(scarab).add(dir.scale(updateDelta * speed))
-  //   if (ModuloInteger(intervals, 2) == 0) {
-  //     flashEffect(
-  //       'Abilities\\Spells\\Undead\\Impale\\ImpaleMissTarget.mdl',
-  //       nextPos
-  //     )
-  //     forDestructablesInCircle(nextPos, 150, (d: Destructable) => {
-  //       if (d.life > 1) {
-  //         if (!DestructableIds.isPathingBlocker(d.typeId)) {
-  //           d.kill()
-  //         }
-  //       }
-  //     })
-  //   }
-
-  //   if (!isTerrainWalkable(nextPos)) {
-  //     timer.release()
-  //     trg.destroy()
-  //     scarab.paused = false
-  //     return
-  //   }
-  //   scarab.x = nextPos.x
-  //   scarab.y = nextPos.y
-  // })
 }
 
 export function initScarab() {

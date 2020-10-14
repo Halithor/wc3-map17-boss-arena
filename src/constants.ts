@@ -33,6 +33,10 @@ export class DestructableIds {
 
 export class ItemIds {
   static readonly Ahnk = FourCC('I000')
+
+  static readonly LifeRune = FourCC('I001')
+  static readonly ManaRune = FourCC('I002')
+  static readonly RestoRune = FourCC('I003')
 }
 
 export class AbilityIds {
@@ -43,4 +47,7 @@ export class AbilityIds {
   static readonly Flamestrike = FourCC('A00I')
   static readonly HearthsEmbrace = FourCC('A00F')
   static readonly TrailOfFlame = FourCC('A00D')
+
+  static readonly DummyFlamestrikeStun = FourCC('A00L')
+  static readonly DummyHearthsEmbraceStun = FourCC('A00M')
 }
