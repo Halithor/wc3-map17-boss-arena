@@ -10,10 +10,10 @@ import {
   getRandomUnitInRange,
 } from 'lib/groups'
 import {forDestructablesInCircle} from 'lib/destructables'
-import {Angle} from 'lib/angle'
+import {Angle, degrees} from 'lib/angle'
 import {isTerrainWalkable} from 'lib/terrain'
 import {Lightning, LightningType} from 'lib/lightning'
-import {doAfter} from 'lib/timer'
+import {doAfter, doPeriodically} from 'lib/timer'
 import {castTarget} from 'lib/instantdummy'
 
 const updateDelta = 0.01
@@ -34,6 +34,14 @@ let strangleDelay = 0
 const strangleDuration = 800
 const strangleDamage = 1200
 
+let wispsUsed = false
+let wispCleanup: () => void
+const wispCount = 3
+const wispSummonDuration = 200
+const wispHealing = 5
+const wispDistance = 300
+const wispAngularSpeed = 70
+
 export class TreeAncient {
   tree: Unit
   private statemachine: Statemachine
@@ -50,6 +58,8 @@ export class TreeAncient {
   }
 
   start() {
+    wispsUsed = false
+    wispCleanup = null
     const setup = GetCurrentCameraSetup()
     // pauseCameraSystem(true)
     CinematicModeBJ(true, bj_FORCE_ALL_PLAYERS)
@@ -81,6 +91,9 @@ export class TreeAncient {
   cleanup() {
     this.tree.kill()
     this.statemachine.cleanup()
+    if (wispCleanup) {
+      wispCleanup()
+    }
   }
 }
 
@@ -109,6 +122,11 @@ class PickNextState implements State {
         return u.isEnemy(PlayerAncients) && u.isAlive() && u.isHero()
       })
     )
+    // if below 25% hp, always summon wisps
+    if (entity.life / entity.maxLife < 0.25 && !wispsUsed) {
+      wispsUsed = true
+      return new SummonWisps(entity)
+    }
     if (!(this.lastState instanceof Attacking) && math.random() < 0.6) {
       return new Attacking(entity)
     }
@@ -501,5 +519,96 @@ class Strangleroots implements State {
     tree.paused = false
     this.target.removeAbility(FourCC('A007'))
     this.lightning.destroy()
+  }
+}
+
+class WispInfo {
+  constructor(public angle: Angle, public u: Unit) {}
+}
+
+class SummonWisps implements State {
+  duration: number = 0
+  wisps: WispInfo[]
+
+  constructor(entity: Unit) {
+    entity.invulnerable = true
+    entity.paused = true
+    this.wisps = []
+  }
+
+  update(entity: Unit): State {
+    if (this.duration % 50 == 0) {
+      flashEffect(
+        'Abilities\\Spells\\Other\\Charm\\CharmTarget.mdl',
+        Vec2.unitPos(entity),
+        2
+      )
+    }
+    this.duration++
+    entity.setAnimation('stand,work')
+
+    if (this.duration > wispSummonDuration) {
+      entity.paused = false
+      print('Spirits of the forest! Restore my strength!')
+      for (let i = 0; i < wispCount; i++) {
+        const angle = degrees((360 / wispCount) * i)
+        const pos = Vec2.unitPos(entity).polarOffset(angle, wispDistance)
+        const wisp = new Unit(entity.owner, UnitIds.WispHealer, pos.x, pos.y, 0)
+        this.wisps.push(new WispInfo(angle, wisp))
+        flashEffect(
+          'Abilities\\Spells\\Human\\DispelMagic\\DispelMagicTarget.mdl',
+          pos
+        )
+      }
+      print('wisps made')
+      let count = 0
+      const cancel = doPeriodically(
+        0.02,
+        (cancel) => {
+          count++
+          const pos = Vec2.unitPos(entity)
+          let alive = false
+          this.wisps.forEach((wisp) => {
+            if (
+              wisp.u.isAlive() &&
+              !(wisp.u.getAbilityLevel(FourCC('BSTN')) > 0) &&
+              !(wisp.u.getAbilityLevel(FourCC('BPSE')) > 0)
+            ) {
+              alive = true
+              wisp.angle = wisp.angle.add(degrees(wispAngularSpeed * 0.02))
+              const nextPos = pos.polarOffset(wisp.angle, wispDistance)
+              wisp.u.x = nextPos.x
+              wisp.u.y = nextPos.y
+              if (count % 10 == 0) {
+                entity.life += wispHealing
+              }
+            }
+          })
+          if (!alive) {
+            cancel()
+          }
+        },
+        () => {
+          entity.invulnerable = false
+        }
+      )
+      print('timer setup')
+      wispCleanup = () => {
+        cancel()
+        this.wisps.forEach((wisp) => {
+          if (wisp.u != null && wisp.u.isAlive()) {
+            wisp.u.destroy()
+          }
+        })
+      }
+      print('done with wisps')
+      return new PickNextState(this)
+    }
+
+    return this
+  }
+
+  interrupt(entity: Unit): State {
+    return this
   }
 }

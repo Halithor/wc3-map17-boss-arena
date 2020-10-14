@@ -13,6 +13,7 @@ export class UnitIds {
 
   static readonly TreantMob = FourCC('n001')
   static readonly RockGolemMob = FourCC('n000')
+  static readonly WispHealer = FourCC('e004')
 
   static readonly Dummy = FourCC('ndum')
 

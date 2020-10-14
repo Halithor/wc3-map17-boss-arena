@@ -48,6 +48,10 @@ export class Angle {
   public get asDirection() {
     return new Vec2(Cos(this.rads), Sin(this.rads))
   }
+
+  public add(other: Angle): Angle {
+    return new Angle(this.radians + other.radians)
+  }
 }
 
 // Helper methods that make it easy to construct Angles

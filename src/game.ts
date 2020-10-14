@@ -236,7 +236,17 @@ export class Game {
     killTrg.registerPlayerChatEvent(PlayerOne, '-kill', true)
     killTrg.addAction(() => {
       EnumUnitsSelected(PlayerOne.handle, null, () => {
-        KillUnit(GetEnumUnit())
+        const u = Unit.fromHandle(GetEnumUnit())
+        u.damageTarget(
+          u.handle,
+          u.maxLife * 0.75,
+          0,
+          false,
+          true,
+          ATTACK_TYPE_MELEE,
+          DAMAGE_TYPE_NORMAL,
+          WEAPON_TYPE_WHOKNOWS
+        )
       })
     })
   }
