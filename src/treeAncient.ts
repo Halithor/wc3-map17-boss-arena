@@ -32,7 +32,7 @@ const chargeDamage = 200
 
 let strangleDelay = 0
 const strangleDuration = 800
-const strangleDamage = 1200
+const strangleDamage = 800
 
 let wispsUsed = false
 let wispCleanup: () => void
@@ -531,7 +531,6 @@ class SummonWisps implements State {
   wisps: WispInfo[]
 
   constructor(entity: Unit) {
-    entity.invulnerable = true
     entity.paused = true
     this.wisps = []
   }
@@ -561,36 +560,30 @@ class SummonWisps implements State {
         )
       }
       let count = 0
-      const cancel = doPeriodically(
-        0.02,
-        (cancel) => {
-          count++
-          const pos = Vec2.unitPos(entity)
-          let alive = false
-          this.wisps.forEach((wisp) => {
-            if (
-              wisp.u.isAlive() &&
-              !(wisp.u.getAbilityLevel(FourCC('BSTN')) > 0) &&
-              !(wisp.u.getAbilityLevel(FourCC('BPSE')) > 0)
-            ) {
-              alive = true
-              wisp.angle = wisp.angle.add(degrees(wispAngularSpeed * 0.02))
-              const nextPos = pos.polarOffset(wisp.angle, wispDistance)
-              wisp.u.x = nextPos.x
-              wisp.u.y = nextPos.y
-              if (count % 10 == 0) {
-                entity.life += wispHealing
-              }
+      const cancel = doPeriodically(0.02, (cancel) => {
+        count++
+        const pos = Vec2.unitPos(entity)
+        let alive = false
+        this.wisps.forEach((wisp) => {
+          if (
+            wisp.u.isAlive() &&
+            !(wisp.u.getAbilityLevel(FourCC('BSTN')) > 0) &&
+            !(wisp.u.getAbilityLevel(FourCC('BPSE')) > 0)
+          ) {
+            alive = true
+            wisp.angle = wisp.angle.add(degrees(wispAngularSpeed * 0.02))
+            const nextPos = pos.polarOffset(wisp.angle, wispDistance)
+            wisp.u.x = nextPos.x
+            wisp.u.y = nextPos.y
+            if (count % 10 == 0) {
+              entity.life += wispHealing
             }
-          })
-          if (!alive) {
-            cancel()
           }
-        },
-        () => {
-          entity.invulnerable = false
+        })
+        if (!alive) {
+          cancel()
         }
-      )
+      })
       wispCleanup = () => {
         cancel()
         this.wisps.forEach((wisp) => {
